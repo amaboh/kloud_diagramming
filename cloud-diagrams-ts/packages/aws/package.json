@@ -1,0 +1,20 @@
+{
+  "name": "@cloud-diagrams/aws",
+  "version": "0.1.0",
+  "description": "AWS services for cloud diagrams",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloud-diagrams/core": "^0.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+} 

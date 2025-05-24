@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cloud Diagrams TypeScript - Interactive Demo</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 300;
+      }
+
+      .header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+
+      .controls {
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #545b62;
+        transform: translateY(-1px);
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #1e7e34;
+        transform: translateY(-1px);
+      }
+
+      .diagram-container {
+        padding: 30px;
+        min-height: 500px;
+        background: white;
+        position: relative;
+      }
+
+      #diagram-display {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+      }
+
+      #diagram-display.has-content {
+        border: 1px solid #dee2e6;
+        background: white;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .placeholder {
+        text-align: center;
+        color: #6c757d;
+        font-size: 1.1em;
+      }
+
+      .status {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 500;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .theme-selector {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .theme-selector label {
+        font-weight: 500;
+        color: #495057;
+      }
+
+      .theme-selector select {
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: white;
+        font-size: 14px;
+      }
+
+      .diagram-info {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e9ecef;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #495057;
+      }
+
+      .diagram-info h4 {
+        margin: 0 0 10px 0;
+        color: #343a40;
+      }
+
+      .diagram-info ul {
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+
+      .loading {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .btn {
+          text-align: center;
+        }
+
+        .theme-selector {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🏗️ Cloud Diagrams TypeScript</h1>
+        <p>Interactive Architecture Diagrams with Mermaid.js Rendering</p>
+      </div>
+
+      <div class="controls">
+        <button id="render-basic" class="btn btn-primary">
+          Render Basic AWS Diagram
+        </button>
+        <button id="render-complex" class="btn btn-primary">
+          Render Complex Architecture
+        </button>
+        <button id="clear-diagram" class="btn btn-secondary">
+          Clear Diagram
+        </button>
+
+        <div class="theme-selector">
+          <label for="theme-select">Theme:</label>
+          <select id="theme-select">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+
+        <button id="export-svg" class="btn btn-success">Export SVG</button>
+        <button id="export-png" class="btn btn-success">Export PNG</button>
+      </div>
+
+      <div class="diagram-container">
+        <div id="diagram-display">
+          <div class="placeholder">
+            <h3>🎯 Ready to Generate Diagrams!</h3>
+            <p>
+              Click one of the buttons above to render an interactive cloud
+              architecture diagram.
+            </p>
+            <p><strong>Features:</strong></p>
+            <ul style="text-align: left; display: inline-block">
+              <li>Interactive SVG rendering with Mermaid.js</li>
+              <li>AWS service icons and components</li>
+              <li>Clickable nodes with metadata</li>
+              <li>Multiple themes (light/dark)</li>
+              <li>Export to SVG/PNG formats</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <div>Rendering diagram...</div>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="diagram-info">
+          <h4>💡 How to Interact:</h4>
+          <ul>
+            <li><strong>Hover</strong> over nodes to see hover effects</li>
+            <li>
+              <strong>Click</strong> on nodes to open AWS console links (if
+              available)
+            </li>
+            <li><strong>Pan and zoom</strong> to explore large diagrams</li>
+            <li><strong>Export</strong> diagrams as SVG or PNG files</li>
+            <li>
+              <strong>Switch themes</strong> to see different visual styles
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load the cloud diagrams library -->
+    <script type="module">
+      // This would normally be: import { Diagram } from '@cloud-diagrams/core';
+      // For demo purposes, we'll create a simplified version
+
+      class MockDiagram {
+        constructor(title, config = {}) {
+          this.title = title;
+          this.config = config;
+          this.nodes = [];
+          this.edges = [];
+          this.groups = [];
+        }
+
+        addNode(node) {
+          this.nodes.push(node);
+          return node;
+        }
+
+        addGroup(name, callback) {
+          const group = { id: Math.random().toString(36), name, nodes: [] };
+          this.groups.push(group);
+          if (callback) {
+            const groupProxy = {
+              addNode: (node) => {
+                group.nodes.push(node);
+                this.nodes.push(node);
+                return node;
+              },
+              getNodes: () => group.nodes,
+            };
+            callback(groupProxy);
+          }
+          return { getNodes: () => group.nodes };
+        }
+
+        connect(from, to, options = {}) {
+          this.edges.push({
+            fromId: from.id,
+            toId: to.id,
+            options,
+          });
+        }
+
+        async render(container, options = {}) {
+          const containerEl =
+            typeof container === 'string'
+              ? document.querySelector(container)
+              : container;
+
+          // Generate Mermaid syntax
+          const mermaidSyntax = this.generateMermaidSyntax();
+
+          // For demo, create a mock SVG
+          const mockSvg = this.createMockSvg(options.theme || 'default');
+          containerEl.innerHTML = mockSvg;
+
+          // Add interactivity
+          this.addInteractivity(containerEl);
+        }
+
+        generateMermaidSyntax() {
+          const lines = [];
+          const direction = this.config.direction || 'LR';
+          lines.push(`flowchart ${direction}`);
+          lines.push('');
+
+          // Add nodes
+          this.nodes.forEach((node) => {
+            const nodeId = node.service + '_' + node.id.slice(-4);
+            lines.push(`    ${nodeId}["🔹 ${node.label}"]`);
+          });
+
+          // Add connections
+          this.edges.forEach((edge) => {
+            const fromNode = this.nodes.find((n) => n.id === edge.fromId);
+            const toNode = this.nodes.find((n) => n.id === edge.toId);
+            if (fromNode && toNode) {
+              const fromId = fromNode.service + '_' + fromNode.id.slice(-4);
+              const toId = toNode.service + '_' + toNode.id.slice(-4);
+              const label = edge.options.label ? `|${edge.options.label}|` : '';
+              lines.push(`    ${fromId} -->${label} ${toId}`);
+            }
+          });
+
+          return lines.join('\n');
+        }
+
+        createMockSvg(theme) {
+          const bgColor = theme === 'dark' ? '#1e1e1e' : '#ffffff';
+          const textColor = theme === 'dark' ? '#ffffff' : '#333333';
+
+          return `
+                    <svg width="800" height="400" style="background: ${bgColor};">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                                    refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="${textColor}" />
+                            </marker>
+                        </defs>
+                        
+                        <!-- Title -->
+                        <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="${textColor}">
+                            ${this.title}
+                        </text>
+                        
+                        <!-- Nodes -->
+                        ${this.nodes
+                          .map((node, i) => {
+                            const x = 100 + (i % 3) * 250;
+                            const y = 100 + Math.floor(i / 3) * 120;
+                            return `
+                                <g class="node" data-node-id="${node.id}" style="cursor: pointer;">
+                                    <rect x="${x - 60}" y="${y - 25}" width="120" height="50" 
+                                          rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+                                    <text x="${x}" y="${y - 5}" text-anchor="middle" font-size="12" fill="${textColor}">
+                                        🔹 ${node.service.toUpperCase()}
+                                    </text>
+                                    <text x="${x}" y="${y + 10}" text-anchor="middle" font-size="10" fill="${textColor}">
+                                        ${node.label}
+                                    </text>
+                                </g>
+                            `;
+                          })
+                          .join('')}
+                        
+                        <!-- Edges -->
+                        ${this.edges
+                          .map((edge) => {
+                            const fromNode = this.nodes.find(
+                              (n) => n.id === edge.fromId
+                            );
+                            const toNode = this.nodes.find(
+                              (n) => n.id === edge.toId
+                            );
+                            if (!fromNode || !toNode) return '';
+
+                            const fromIndex = this.nodes.indexOf(fromNode);
+                            const toIndex = this.nodes.indexOf(toNode);
+
+                            const fromX = 100 + (fromIndex % 3) * 250 + 60;
+                            const fromY = 100 + Math.floor(fromIndex / 3) * 120;
+                            const toX = 100 + (toIndex % 3) * 250 - 60;
+                            const toY = 100 + Math.floor(toIndex / 3) * 120;
+
+                            return `
+                                <line x1="${fromX}" y1="${fromY}" x2="${toX}" y2="${toY}" 
+                                      stroke="${textColor}" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                ${
+                                  edge.options.label
+                                    ? `
+                                    <text x="${(fromX + toX) / 2}" y="${(fromY + toY) / 2 - 5}" 
+                                          text-anchor="middle" font-size="10" fill="${textColor}">
+                                        ${edge.options.label}
+                                    </text>
+                                `
+                                    : ''
+                                }
+                            `;
+                          })
+                          .join('')}
+                        
+                        <!-- Demo watermark -->
+                        <text x="750" y="390" text-anchor="end" font-size="10" fill="#999" opacity="0.7">
+                            Demo Mode - Mermaid.js Integration
+                        </text>
+                    </svg>
+                `;
+        }
+
+        addInteractivity(container) {
+          const nodes = container.querySelectorAll('.node');
+          nodes.forEach((node) => {
+            node.addEventListener('mouseenter', () => {
+              node.style.opacity = '0.8';
+            });
+
+            node.addEventListener('mouseleave', () => {
+              node.style.opacity = '1';
+            });
+
+            node.addEventListener('click', () => {
+              const nodeId = node.getAttribute('data-node-id');
+              const nodeData = this.nodes.find((n) => n.id === nodeId);
+              if (nodeData && nodeData.metadata && nodeData.metadata.url) {
+                window.open(nodeData.metadata.url, '_blank');
+              } else {
+                showStatus(`Clicked: ${nodeData.label}`, 'info');
+              }
+            });
+          });
+        }
+
+        async export(format, options = {}) {
+          // Mock export functionality
+          const content =
+            format === 'svg'
+              ? this.createMockSvg(options.theme || 'default')
+              : 'Mock PNG data';
+
+          return new Blob([content], {
+            type: format === 'svg' ? 'image/svg+xml' : 'image/png',
+          });
+        }
+      }
+
+      // Mock AWS services
+      class EC2 {
+        constructor(id, label, metadata = {}) {
+          this.id = id;
+          this.label = label;
+          this.service = 'ec2';
+          this.metadata = metadata;
+        }
+      }
+
+      class RDS {
+        constructor(id, label, metadata = {}) {
+          this.id = id;
+          this.label = label;
+          this.service = 'rds';
+          this.metadata = metadata;
+        }
+      }
+
+      class S3 {
+        constructor(id, label, metadata = {}) {
+          this.id = id;
+          this.label = label;
+          this.service = 's3';
+          this.metadata = metadata;
+        }
+      }
+
+      class Lambda {
+        constructor(id, label, metadata = {}) {
+          this.id = id;
+          this.label = label;
+          this.service = 'lambda';
+          this.metadata = metadata;
+        }
+      }
+
+      // Global variables
+      let currentDiagram = null;
+      let currentTheme = 'default';
+
+      // Utility functions
+      function showStatus(message, type = 'info') {
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = `<div class="status ${type}">${message}</div>`;
+        setTimeout(() => {
+          statusEl.innerHTML = '';
+        }, 3000);
+      }
+
+      function showLoading(show) {
+        document.getElementById('loading').style.display = show
+          ? 'block'
+          : 'none';
+      }
+
+      function updateDiagramContainer(hasContent) {
+        const container = document.getElementById('diagram-display');
+        if (hasContent) {
+          container.classList.add('has-content');
+        } else {
+          container.classList.remove('has-content');
+        }
+      }
+
+      // Event handlers
+      document
+        .getElementById('render-basic')
+        .addEventListener('click', async () => {
+          showLoading(true);
+
+          try {
+            // Create basic AWS diagram
+            const diagram = new MockDiagram('Basic AWS Architecture', {
+              direction: 'LR',
+            });
+
+            const web = diagram.addNode(
+              new EC2('web-1', 'Web Server', {
+                url: 'https://console.aws.amazon.com/ec2',
+                description: 'Frontend web server',
+              })
+            );
+
+            const db = diagram.addNode(
+              new RDS('db-1', 'Database', {
+                url: 'https://console.aws.amazon.com/rds',
+                description: 'MySQL database',
+              })
+            );
+
+            const storage = diagram.addNode(
+              new S3('storage-1', 'File Storage', {
+                url: 'https://console.aws.amazon.com/s3',
+                description: 'Static assets bucket',
+              })
+            );
+
+            diagram.connect(web, db, { label: 'SQL Queries' });
+            diagram.connect(web, storage, { label: 'Static Files' });
+
+            await diagram.render('#diagram-display', { theme: currentTheme });
+            currentDiagram = diagram;
+
+            updateDiagramContainer(true);
+            showStatus(
+              '✅ Basic AWS diagram rendered successfully!',
+              'success'
+            );
+          } catch (error) {
+            showStatus(`❌ Error rendering diagram: ${error.message}`, 'error');
+          } finally {
+            showLoading(false);
+          }
+        });
+
+      document
+        .getElementById('render-complex')
+        .addEventListener('click', async () => {
+          showLoading(true);
+
+          try {
+            // Create complex architecture
+            const diagram = new MockDiagram('Microservices Architecture', {
+              direction: 'TB',
+            });
+
+            // Add VPC group
+            const vpc = diagram.addGroup('Production VPC', (group) => {
+              const web1 = new EC2('web-1', 'Web Server 1', {
+                url: 'https://console.aws.amazon.com/ec2',
+              });
+              const web2 = new EC2('web-2', 'Web Server 2', {
+                url: 'https://console.aws.amazon.com/ec2',
+              });
+
+              group.addNode(web1);
+              group.addNode(web2);
+            });
+
+            // External services
+            const api = diagram.addNode(
+              new Lambda('api-1', 'API Gateway', {
+                url: 'https://console.aws.amazon.com/lambda',
+              })
+            );
+
+            const db = diagram.addNode(
+              new RDS('db-1', 'Primary DB', {
+                url: 'https://console.aws.amazon.com/rds',
+              })
+            );
+
+            const cache = diagram.addNode(
+              new RDS('cache-1', 'Redis Cache', {
+                url: 'https://console.aws.amazon.com/elasticache',
+              })
+            );
+
+            const storage = diagram.addNode(
+              new S3('storage-1', 'Data Lake', {
+                url: 'https://console.aws.amazon.com/s3',
+              })
+            );
+
+            // Create connections
+            const webServers = vpc.getNodes();
+            webServers.forEach((webServer) => {
+              diagram.connect(api, webServer, { label: 'HTTP' });
+              diagram.connect(webServer, db, { label: 'Queries' });
+              diagram.connect(webServer, cache, { label: 'Cache' });
+            });
+
+            diagram.connect(db, storage, { label: 'Backup' });
+
+            await diagram.render('#diagram-display', { theme: currentTheme });
+            currentDiagram = diagram;
+
+            updateDiagramContainer(true);
+            showStatus(
+              '✅ Complex architecture diagram rendered successfully!',
+              'success'
+            );
+          } catch (error) {
+            showStatus(`❌ Error rendering diagram: ${error.message}`, 'error');
+          } finally {
+            showLoading(false);
+          }
+        });
+
+      document.getElementById('clear-diagram').addEventListener('click', () => {
+        document.getElementById('diagram-display').innerHTML = `
+                <div class="placeholder">
+                    <h3>🎯 Ready to Generate Diagrams!</h3>
+                    <p>Click one of the buttons above to render an interactive cloud architecture diagram.</p>
+                </div>
+            `;
+        updateDiagramContainer(false);
+        currentDiagram = null;
+        showStatus('🗑️ Diagram cleared', 'info');
+      });
+
+      document
+        .getElementById('theme-select')
+        .addEventListener('change', async (e) => {
+          currentTheme = e.target.value;
+          if (currentDiagram) {
+            showLoading(true);
+            try {
+              await currentDiagram.render('#diagram-display', {
+                theme: currentTheme,
+              });
+              showStatus(`🎨 Theme changed to ${currentTheme}`, 'success');
+            } catch (error) {
+              showStatus(`❌ Error changing theme: ${error.message}`, 'error');
+            } finally {
+              showLoading(false);
+            }
+          }
+        });
+
+      document
+        .getElementById('export-svg')
+        .addEventListener('click', async () => {
+          if (!currentDiagram) {
+            showStatus('⚠️ Please render a diagram first', 'error');
+            return;
+          }
+
+          try {
+            const blob = await currentDiagram.export('svg', {
+              theme: currentTheme,
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'diagram.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus('📥 SVG exported successfully!', 'success');
+          } catch (error) {
+            showStatus(`❌ Export failed: ${error.message}`, 'error');
+          }
+        });
+
+      document
+        .getElementById('export-png')
+        .addEventListener('click', async () => {
+          if (!currentDiagram) {
+            showStatus('⚠️ Please render a diagram first', 'error');
+            return;
+          }
+
+          try {
+            const blob = await currentDiagram.export('png', {
+              theme: currentTheme,
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'diagram.png';
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus('📥 PNG exported successfully!', 'success');
+          } catch (error) {
+            showStatus(`❌ Export failed: ${error.message}`, 'error');
+          }
+        });
+
+      // Initialize
+      showStatus('🚀 Cloud Diagrams TypeScript Demo Ready!', 'info');
+    </script>
+  </body>
+</html>
