@@ -38,4 +38,10 @@ export type {
   EdgeOptions,
   RenderOptions,
   DiagramModel,
+  ExportFormat,
+  Theme,
+  Theme as ThemeDefinition,
+  RendererCapabilities,
+  NodeClickEvent,
+  DiagramEvent,
 } from './types';

@@ -1,0 +1,147 @@
+{
+  "name": "3-Tier Web Application",
+  "config": {
+    "direction": "LR",
+    "theme": "light"
+  },
+  "groups": [
+    {
+      "id": "vpc",
+      "name": "Production VPC"
+    },
+    {
+      "id": "web",
+      "name": "Web Tier",
+      "parent": "vpc"
+    },
+    {
+      "id": "app",
+      "name": "Application Tier",
+      "parent": "vpc"
+    },
+    {
+      "id": "db",
+      "name": "Database Tier",
+      "parent": "vpc"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cdn",
+      "provider": "aws",
+      "service": "CloudFront",
+      "label": "CDN"
+    },
+    {
+      "id": "lb",
+      "provider": "aws",
+      "service": "ALB",
+      "label": "Load Balancer",
+      "group": "web"
+    },
+    {
+      "id": "web1",
+      "provider": "aws",
+      "service": "EC2",
+      "label": "Web Server 1",
+      "group": "web"
+    },
+    {
+      "id": "web2",
+      "provider": "aws",
+      "service": "EC2",
+      "label": "Web Server 2",
+      "group": "web"
+    },
+    {
+      "id": "app1",
+      "provider": "aws",
+      "service": "EC2",
+      "label": "App Server 1",
+      "group": "app"
+    },
+    {
+      "id": "app2",
+      "provider": "aws",
+      "service": "EC2",
+      "label": "App Server 2",
+      "group": "app"
+    },
+    {
+      "id": "primary_db",
+      "provider": "aws",
+      "service": "RDS",
+      "label": "Primary Database",
+      "group": "db"
+    },
+    {
+      "id": "replica_db",
+      "provider": "aws",
+      "service": "RDS",
+      "label": "Read Replica",
+      "group": "db"
+    },
+    {
+      "id": "cache",
+      "provider": "aws",
+      "service": "ElastiCache",
+      "label": "Redis Cache",
+      "group": "db"
+    },
+    {
+      "id": "storage",
+      "provider": "aws",
+      "service": "S3",
+      "label": "Static Assets"
+    }
+  ],
+  "edges": [
+    {
+      "from": "cdn",
+      "to": "lb",
+      "label": "HTTPS"
+    },
+    {
+      "from": "lb",
+      "to": "web1"
+    },
+    {
+      "from": "lb",
+      "to": "web2"
+    },
+    {
+      "from": "web1",
+      "to": "app1"
+    },
+    {
+      "from": "web2",
+      "to": "app2"
+    },
+    {
+      "from": "app1",
+      "to": "primary_db"
+    },
+    {
+      "from": "app2",
+      "to": "primary_db"
+    },
+    {
+      "from": "app1",
+      "to": "cache"
+    },
+    {
+      "from": "app2",
+      "to": "cache"
+    },
+    {
+      "from": "primary_db",
+      "to": "replica_db",
+      "label": "Replication"
+    },
+    {
+      "from": "cdn",
+      "to": "storage",
+      "label": "Static Content"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "@cloud-diagrams/react",
+  "version": "1.0.0",
+  "description": "React components for cloud architecture diagrams",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cloud",
+    "diagrams",
+    "react",
+    "aws",
+    "azure",
+    "gcp",
+    "architecture",
+    "visualization"
+  ],
+  "author": "Cloud Diagrams Team",
+  "license": "MIT",
+  "dependencies": {
+    "@cloud-diagrams/core": "file:../core",
+    "@cloud-diagrams/aws": "file:../aws",
+    "@cloud-diagrams/azure": "file:../azure",
+    "@cloud-diagrams/gcp": "file:../gcp"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "@types/jest": "^29.5.0",
+    "typescript": "^5.0.0",
+    "rollup": "^3.21.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tslib": "^2.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/cloud-diagrams-ts.git",
+    "directory": "packages/react"
+  }
+}

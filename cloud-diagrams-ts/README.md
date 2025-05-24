@@ -285,11 +285,17 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 📚 Documentation
 
-- [API Reference](docs/api.md)
-- [Service Catalog](docs/services.md)
-- [Theming Guide](docs/theming.md)
-- [Export Guide](docs/export.md)
-- [Contributing](CONTRIBUTING.md)
+**📖 [Complete Documentation](./docs/README.md)** - Comprehensive guides and references
+
+### Quick Links
+
+| Resource                                           | Description                                |
+| -------------------------------------------------- | ------------------------------------------ |
+| **[🎯 Quick Start](./docs/quick-start.md)**        | Get up and running in 5 minutes            |
+| **[🟠 AWS Services](./docs/providers/aws.md)**     | Complete AWS service catalog with examples |
+| **[💻 CLI Tool](./docs/cli/README.md)**            | Command-line interface documentation       |
+| **[⚛️ React Integration](./docs/react/README.md)** | React components and hooks                 |
+| **[🔄 CI/CD Integration](./docs/ci-cd.md)**        | Automated diagram generation               |
 
 ## 🗺️ Roadmap
 
