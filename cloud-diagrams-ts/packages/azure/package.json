@@ -1,0 +1,29 @@
+{
+  "name": "@cloud-diagrams/azure",
+  "version": "0.2.0",
+  "description": "Azure services for cloud-diagrams-ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "dev": "rollup -c -w"
+  },
+  "dependencies": {
+    "@cloud-diagrams/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.0",
+    "rollup": "^4.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
