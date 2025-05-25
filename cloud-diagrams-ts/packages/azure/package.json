@@ -5,13 +5,38 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
     "dev": "rollup -c -w"
   },
+  "keywords": [
+    "azure",
+    "cloud",
+    "diagrams",
+    "microsoft",
+    "app-service",
+    "sql-database",
+    "functions",
+    "architecture",
+    "typescript"
+  ],
+  "author": "amaboh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amaboh/kloud_diagramming.git",
+    "directory": "cloud-diagrams-ts/packages/azure"
+  },
+  "homepage": "https://github.com/amaboh/kloud_diagramming#readme",
+  "bugs": {
+    "url": "https://github.com/amaboh/kloud_diagramming/issues"
+  },
   "dependencies": {
-    "@cloud-diagrams/core": "file:../core"
+    "@cloud-diagrams/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",
@@ -20,9 +45,6 @@
     "@rollup/plugin-typescript": "^11.0.0",
     "typescript": "^5.0.0"
   },
-  "files": [
-    "dist"
-  ],
   "publishConfig": {
     "access": "public"
   }

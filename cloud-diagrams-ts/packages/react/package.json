@@ -24,13 +24,22 @@
     "architecture",
     "visualization"
   ],
-  "author": "Cloud Diagrams Team",
+  "author": "amaboh",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amaboh/kloud_diagramming.git",
+    "directory": "cloud-diagrams-ts/packages/react"
+  },
+  "homepage": "https://github.com/amaboh/kloud_diagramming#readme",
+  "bugs": {
+    "url": "https://github.com/amaboh/kloud_diagramming/issues"
+  },
   "dependencies": {
-    "@cloud-diagrams/core": "file:../core",
-    "@cloud-diagrams/aws": "file:../aws",
-    "@cloud-diagrams/azure": "file:../azure",
-    "@cloud-diagrams/gcp": "file:../gcp"
+    "@cloud-diagrams/core": "^0.1.0",
+    "@cloud-diagrams/aws": "^0.1.0",
+    "@cloud-diagrams/azure": "^0.2.0",
+    "@cloud-diagrams/gcp": "^0.2.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -56,9 +65,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.5.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/your-org/cloud-diagrams-ts.git",
-    "directory": "packages/react"
+  "publishConfig": {
+    "access": "public"
   }
 }

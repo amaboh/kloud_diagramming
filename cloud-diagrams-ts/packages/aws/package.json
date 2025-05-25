@@ -5,16 +5,44 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
+  "keywords": [
+    "aws",
+    "cloud",
+    "diagrams",
+    "ec2",
+    "lambda",
+    "rds",
+    "s3",
+    "architecture",
+    "typescript"
+  ],
+  "author": "amaboh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amaboh/kloud_diagramming.git",
+    "directory": "cloud-diagrams-ts/packages/aws"
+  },
+  "homepage": "https://github.com/amaboh/kloud_diagramming#readme",
+  "bugs": {
+    "url": "https://github.com/amaboh/kloud_diagramming/issues"
+  },
   "dependencies": {
     "@cloud-diagrams/core": "^0.1.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
-} 
+}

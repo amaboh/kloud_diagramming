@@ -1,243 +1,326 @@
-# 🏗️ Cloud Diagrams TypeScript
+# 📊 @cloud-diagrams - TypeScript Cloud Architecture Diagrams
 
-> **Interactive cloud architecture diagrams as TypeScript code**
+<div align="center">
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/your-org/cloud-diagrams-ts)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-[![Mermaid](https://img.shields.io/badge/Mermaid.js-10.6+-ff6b6b)](https://mermaid.js.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+![npm](https://img.shields.io/npm/v/@cloud-diagrams/core)
+![npm downloads](https://img.shields.io/npm/dm/@cloud-diagrams/core)
+![GitHub](https://img.shields.io/github/license/amaboh/kloud_diagramming)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 
-A powerful TypeScript library for creating **interactive cloud architecture diagrams** using code. Inspired by [Mingrammer's Diagrams](https://diagrams.mingrammer.com/) but built for the modern web with TypeScript, interactive features, and browser-native rendering.
+**Professional cloud architecture diagrams with TypeScript. Multi-cloud support for AWS, Azure, and GCP.**
 
-## ✨ Features
+[📚 Tutorial](./TUTORIAL.md) • [🛠️ API Docs](#api-documentation) • [🤝 Contributing](./CONTRIBUTING.md) • [🎯 Examples](#examples)
 
-- 🎯 **Type-Safe DSL**: Full TypeScript support with IDE autocompletion
-- 🎨 **Interactive Rendering**: Hover effects, click handlers, and custom events
-- ☁️ **Multi-Cloud Support**: AWS services (Azure & GCP coming soon)
-- 🖼️ **Multiple Export Formats**: SVG, PNG, and PDF export
-- 🎭 **Theme Support**: Light, dark, and custom themes
-- 🔧 **Extensible Architecture**: Plugin-ready for custom providers
-- 🌐 **Browser Native**: No external dependencies or server required
-- 📱 **Responsive**: Works on desktop and mobile devices
+</div>
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
+# Install core library and your preferred cloud providers
 npm install @cloud-diagrams/core @cloud-diagrams/aws
+
+# For React applications
+npm install @cloud-diagrams/react
+
+# For CLI usage
+npm install -g @cloud-diagrams/cli
 ```
 
-### Basic Usage
+### Your First Diagram
 
 ```typescript
 import { Diagram } from '@cloud-diagrams/core';
-import { EC2, RDS, S3 } from '@cloud-diagrams/aws';
+import { EC2, RDS, VPC } from '@cloud-diagrams/aws';
 
 // Create a new diagram
-const diagram = new Diagram('3-Tier Web Application', {
-  direction: 'LR',
-  theme: 'default',
+const diagram = new Diagram('My AWS Architecture');
+
+// Create cloud resources
+const vpc = new VPC('main-vpc', { label: 'Main VPC' });
+const webServer = new EC2('web-server', {
+  label: 'Web Server',
+  instanceType: 't3.medium',
+});
+const database = new RDS('database', {
+  label: 'PostgreSQL Database',
+  engine: 'postgres',
 });
 
-// Add AWS services
-const webServer = diagram.addNode(
-  new EC2('web-1', 'Web Server', {
-    url: 'https://console.aws.amazon.com/ec2',
-  })
-);
+// Organize with groups
+vpc.addNode(webServer);
+vpc.addNode(database);
+diagram.addGroup(vpc);
 
-const database = diagram.addNode(
-  new RDS('db-1', 'Database', {
-    url: 'https://console.aws.amazon.com/rds',
-  })
-);
+// Connect components
+diagram.connect(webServer, database, { label: 'queries' });
 
-const storage = diagram.addNode(
-  new S3('storage-1', 'File Storage', {
-    url: 'https://console.aws.amazon.com/s3',
-  })
-);
-
-// Create connections
-diagram.connect(webServer, database, { label: 'SQL Queries' });
-diagram.connect(webServer, storage, { label: 'Static Files' });
-
-// Render interactive diagram
-await diagram.render('#diagram-container', {
-  theme: 'default',
-  interactive: true,
-});
+// Generate Mermaid diagram
+const mermaidCode = diagram.render();
+console.log(mermaidCode);
 ```
 
-### Advanced Example with Groups
+## 📦 Package Suite
+
+| Package                                                                  | Description                                        | Size                                                                                 | Downloads                                                   |
+| ------------------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| [@cloud-diagrams/core](https://npmjs.com/package/@cloud-diagrams/core)   | Core DSL and rendering engine                      | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/core)  | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/core)  |
+| [@cloud-diagrams/aws](https://npmjs.com/package/@cloud-diagrams/aws)     | AWS services (EC2, Lambda, RDS, S3, etc.)          | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/aws)   | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/aws)   |
+| [@cloud-diagrams/azure](https://npmjs.com/package/@cloud-diagrams/azure) | Azure services (VMs, Functions, SQL, etc.)         | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/azure) | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/azure) |
+| [@cloud-diagrams/gcp](https://npmjs.com/package/@cloud-diagrams/gcp)     | Google Cloud services (GCE, Cloud Functions, etc.) | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/gcp)   | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/gcp)   |
+| [@cloud-diagrams/react](https://npmjs.com/package/@cloud-diagrams/react) | React components and hooks                         | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/react) | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/react) |
+| [@cloud-diagrams/cli](https://npmjs.com/package/@cloud-diagrams/cli)     | Command-line interface                             | ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@cloud-diagrams/cli)   | ![npm](https://img.shields.io/npm/dm/@cloud-diagrams/cli)   |
+
+## ✨ Features
+
+### 🏗️ **Multi-Cloud Support**
+
+- **AWS**: 15+ services including EC2, Lambda, RDS, S3, VPC
+- **Azure**: 20+ services including VMs, Functions, SQL Database, Cosmos DB
+- **GCP**: 10+ services including Compute Engine, Cloud Functions, Cloud SQL
+- **Multi-Cloud**: Cross-provider architectures and data pipelines
+
+### ⚛️ **React Integration**
+
+- Pre-built components (`DiagramRenderer`, `CloudNode`, `DiagramGroup`)
+- Custom hooks (`useDiagram`, `useTheme`, `useExport`)
+- Context providers for state management
+- TypeScript support with full type definitions
+
+### 🖥️ **CLI Tool**
+
+- Generate diagrams from TypeScript/JavaScript files
+- Multiple export formats (SVG, PNG, PDF)
+- Project templates for quick setup
+- Watch mode for development
+- CI/CD integration
+
+### 🎨 **Professional Styling**
+
+- Official cloud provider icons and styling
+- Multiple themes (default, dark, custom)
+- Advanced layout algorithms
+- Interactive elements and hover effects
+- High-quality exports for presentations
+
+## 📋 Usage Examples
+
+### Basic Multi-Tier Architecture
 
 ```typescript
-import { Diagram } from '@cloud-diagrams/core';
-import { EC2, RDS, Lambda } from '@cloud-diagrams/aws';
+import { Diagram, Group } from '@cloud-diagrams/core';
+import { EC2, RDS, LoadBalancer } from '@cloud-diagrams/aws';
 
-const diagram = new Diagram('Microservices Architecture', { direction: 'TB' });
+const diagram = new Diagram('3-Tier Web Application');
 
-// Create VPC group
-const vpc = diagram.addGroup('Production VPC', (group) => {
-  group.addNode(new EC2('web-1', 'Web Server 1'));
-  group.addNode(new EC2('web-2', 'Web Server 2'));
-});
+// Create tiers
+const webTier = new Group('web-tier', { label: 'Web Tier' });
+const appTier = new Group('app-tier', { label: 'Application Tier' });
+const dataTier = new Group('data-tier', { label: 'Data Tier' });
 
-// Add external services
-const api = diagram.addNode(new Lambda('api-1', 'API Gateway'));
-const db = diagram.addNode(new RDS('db-1', 'Primary Database'));
+// Add components
+const alb = new LoadBalancer('alb', { label: 'Application Load Balancer' });
+const webServer = new EC2('web', { label: 'Web Server' });
+const appServer = new EC2('app', { label: 'Application Server' });
+const database = new RDS('db', { label: 'Database' });
 
-// Connect services
-const webServers = vpc.getNodes();
-webServers.forEach((server) => {
-  diagram.connect(api, server, { label: 'HTTP' });
-  diagram.connect(server, db, { label: 'Queries' });
-});
+// Organize into tiers
+webTier.addNode(alb);
+webTier.addNode(webServer);
+appTier.addNode(appServer);
+dataTier.addNode(database);
 
-await diagram.render('#container');
+// Add to diagram
+diagram.addGroup(webTier);
+diagram.addGroup(appTier);
+diagram.addGroup(dataTier);
+
+// Connect components
+diagram.connect(alb, webServer);
+diagram.connect(webServer, appServer);
+diagram.connect(appServer, database);
 ```
 
-## 🎪 Interactive Demo
+### React Component
 
-Open `examples/browser-demo/index.html` in your browser to see a **live interactive demo** showcasing:
+```tsx
+import React from 'react';
+import { DiagramRenderer, DiagramProvider } from '@cloud-diagrams/react';
 
-- ✅ Real-time diagram rendering
-- ✅ Multiple architecture examples
-- ✅ Theme switching
-- ✅ Export functionality
-- ✅ Interactive node clicking
-- ✅ Professional UI design
-
-## 📦 Packages
-
-| Package                 | Description                   | Status             |
-| ----------------------- | ----------------------------- | ------------------ |
-| `@cloud-diagrams/core`  | Core DSL and rendering engine | ✅ **Stable**      |
-| `@cloud-diagrams/aws`   | AWS services and components   | ✅ **Stable**      |
-| `@cloud-diagrams/azure` | Azure services and components | 🚧 **Coming Soon** |
-| `@cloud-diagrams/gcp`   | Google Cloud services         | 🚧 **Coming Soon** |
-| `@cloud-diagrams/react` | React integration components  | 🚧 **Planned**     |
-| `@cloud-diagrams/cli`   | Command-line interface        | 🚧 **Planned**     |
-
-## 🎨 Supported Services
-
-### AWS Services ✅
-
-#### Compute
-
-- **EC2** - Elastic Compute Cloud
-- **Lambda** - Serverless Functions
-- **ECS** - Container Service
-
-#### Database
-
-- **RDS** - Relational Database Service
-- **DynamoDB** - NoSQL Database
-
-#### Storage
-
-- **S3** - Simple Storage Service
-- **EFS** - Elastic File System
-
-#### Network
-
-- **VPC** - Virtual Private Cloud
-- **Route53** - DNS Service
-- **CloudFront** - CDN
-
-_More services being added regularly!_
-
-## 🎭 Themes
-
-```typescript
-// Available themes
-await diagram.render('#container', { theme: 'default' }); // Clean, professional
-await diagram.render('#container', { theme: 'dark' }); // Dark mode
-await diagram.render('#container', { theme: 'light' }); // Minimal light
-```
-
-## 📥 Export Options
-
-```typescript
-// Export as SVG (vector graphics)
-const svgBlob = await diagram.export('svg', {
-  width: 1200,
-  height: 800,
-});
-
-// Export as PNG (raster image)
-const pngBlob = await diagram.export('png', {
-  width: 1200,
-  height: 800,
-  backgroundColor: 'white',
-});
-
-// Export as PDF (document ready)
-const pdfBlob = await diagram.export('pdf', {
-  width: 1200,
-  height: 800,
-});
-```
-
-## 🖱️ Interactivity
-
-### Click Handlers
-
-```typescript
-// Add metadata with URLs
-const webServer = new EC2('web-1', 'Web Server', {
-  url: 'https://console.aws.amazon.com/ec2',
-  description: 'Primary web server',
-});
-
-// Listen for node clicks
-container.addEventListener('nodeClick', (event) => {
-  const { node } = event.detail;
-  console.log(`Clicked: ${node.label}`);
-  // Custom handling logic
-});
-```
-
-### Hover Effects
-
-Nodes automatically show hover effects and cursor changes. Customize with CSS:
-
-```css
-.diagram-theme-dark .node:hover {
-  opacity: 0.8;
-  transform: scale(1.05);
+function MyArchitectureApp() {
+  return (
+    <DiagramProvider>
+      <div className="architecture-container">
+        <h1>My Cloud Architecture</h1>
+        <DiagramRenderer
+          diagram={myDiagram}
+          theme="default"
+          width={1000}
+          height={600}
+          onNodeClick={(nodeId) => console.log('Clicked:', nodeId)}
+        />
+      </div>
+    </DiagramProvider>
+  );
 }
 ```
 
-## 🏗️ Architecture
+### CLI Usage
 
+```bash
+# Generate diagram from TypeScript file
+cloud-diagrams generate architecture.ts -o diagram.svg
+
+# Initialize new project with template
+cloud-diagrams init my-app --provider aws --template 3tier
+
+# Export as PNG for presentations
+cloud-diagrams generate architecture.ts -f png -o presentation.png --width 1920 --height 1080
+
+# Watch mode for development
+cloud-diagrams generate architecture.ts --watch
 ```
-cloud-diagrams-ts/
-├── packages/
-│   ├── core/           # Core DSL and rendering
-│   ├── aws/            # AWS service implementations
-│   ├── azure/          # Azure services (planned)
-│   └── gcp/            # GCP services (planned)
-├── examples/
-│   ├── basic/          # Simple usage examples
-│   └── browser-demo/   # Interactive demo
-└── docs/               # Documentation
+
+### Multi-Cloud Architecture
+
+```typescript
+import { Diagram } from '@cloud-diagrams/core';
+import { S3, Lambda } from '@cloud-diagrams/aws';
+import { BlobStorage, Functions } from '@cloud-diagrams/azure';
+import { CloudStorage } from '@cloud-diagrams/gcp';
+
+const diagram = new Diagram('Multi-Cloud Data Pipeline');
+
+// Data sources
+const awsData = new S3('aws-data', { label: 'AWS Data Lake' });
+const azureProcessor = new Functions('azure-etl', { label: 'Azure Function' });
+const gcpWarehouse = new CloudStorage('gcp-warehouse', {
+  label: 'GCP Data Warehouse',
+});
+
+diagram.addNode(awsData);
+diagram.addNode(azureProcessor);
+diagram.addNode(gcpWarehouse);
+
+// Cross-cloud data flow
+diagram.connect(awsData, azureProcessor, { label: 'raw data' });
+diagram.connect(azureProcessor, gcpWarehouse, { label: 'processed data' });
 ```
 
-## 🧪 Development
+## 📚 Documentation
 
-### Prerequisites
+### 📖 **User Guides**
 
-- Node.js 18+
-- npm 9+
+- **[Complete Tutorial](./TUTORIAL.md)** - Comprehensive guide with examples
+- **[API Documentation](#api-documentation)** - Full TypeScript API reference
+- **[CLI Guide](./TUTORIAL.md#cli-usage)** - Command-line interface documentation
+
+### 🛠️ **Developer Resources**
+
+- **[Contributing Guide](./CONTRIBUTING.md)** - Setup, standards, and workflow
+- **[Architecture Overview](#architecture)** - Technical design and patterns
+- **[Examples Directory](./examples/)** - Real-world usage examples
+
+### 🎯 **Quick References**
+
+- **[Supported Services](#supported-cloud-services)** - Complete service coverage
+- **[Configuration Options](#configuration)** - Themes, layouts, and customization
+- **[Troubleshooting](#troubleshooting)** - Common issues and solutions
+
+## 🌐 Supported Cloud Services
+
+### AWS (15+ Services)
+
+- **Compute**: EC2, Lambda, ECS, EKS
+- **Database**: RDS, DynamoDB, Aurora
+- **Storage**: S3, EBS, EFS
+- **Network**: VPC, Load Balancer, CloudFront
+- **Analytics**: Redshift, EMR
+
+### Azure (20+ Services)
+
+- **Compute**: Virtual Machines, Functions, Container Instances, AKS
+- **Database**: SQL Database, Cosmos DB, MySQL, PostgreSQL
+- **Storage**: Blob Storage, File Storage, Queue Storage
+- **Network**: Virtual Network, Load Balancer, Application Gateway
+- **AI/ML**: Cognitive Services, Machine Learning
+
+### Google Cloud (10+ Services)
+
+- **Compute**: Compute Engine, Cloud Functions, GKE
+- **Database**: Cloud SQL, Firestore
+- **Storage**: Cloud Storage
+- **Network**: VPC, Load Balancer
+- **Analytics**: BigQuery, Dataflow
+
+## 🎨 Themes and Customization
+
+```typescript
+// Built-in themes
+diagram.setTheme('default'); // Professional light theme
+diagram.setTheme('dark'); // Dark mode theme
+
+// Custom theme
+diagram.setTheme({
+  name: 'corporate',
+  background: '#f8f9fa',
+  nodeDefaults: {
+    fillColor: '#ffffff',
+    strokeColor: '#007bff',
+    fontFamily: 'Arial, sans-serif',
+  },
+  groupDefaults: {
+    background: '#e9ecef',
+    border: '1px solid #dee2e6',
+  },
+});
+
+// Layout algorithms
+diagram.setLayout('hierarchical', {
+  direction: 'TOP_TO_BOTTOM',
+  nodeSpacing: 50,
+});
+```
+
+## 🚀 Advanced Features
+
+### Interactive Diagrams
+
+```typescript
+// Click handlers
+webServer.onClick((node, event) => {
+  window.open(
+    `https://console.aws.amazon.com/ec2/v2/home#Instances:instanceId=${node.id}`
+  );
+});
+
+// Hover effects
+database.onHover((node, event) => {
+  showTooltip(`Database: ${node.metadata.engine}`);
+});
+```
+
+### Export Options
+
+```typescript
+import { exportDiagram } from '@cloud-diagrams/core';
+
+// Export to different formats
+await exportDiagram(diagram, 'svg', { theme: 'dark' });
+await exportDiagram(diagram, 'png', { width: 1920, height: 1080 });
+await exportDiagram(diagram, 'pdf', { title: 'Architecture Overview' });
+```
+
+## 🛠️ Development
 
 ### Setup
 
 ```bash
-# Clone repository
-git clone https://github.com/your-org/cloud-diagrams-ts.git
-cd cloud-diagrams-ts
+# Clone the repository
+git clone https://github.com/amaboh/kloud_diagramming.git
+cd kloud_diagramming/cloud-diagrams-ts
 
 # Install dependencies
 npm install
@@ -247,117 +330,135 @@ npm run build
 
 # Run tests
 npm test
-
-# Clean build
-npm run clean
 ```
 
-### Testing
+### Contributing
+
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for:
+
+- **Development Setup** - Local environment configuration
+- **Coding Standards** - TypeScript style guide and best practices
+- **Testing Requirements** - Unit and integration test guidelines
+- **Pull Request Process** - How to submit changes
+- **Issue Guidelines** - Bug reports and feature requests
+
+### Project Structure
+
+```
+cloud-diagrams-ts/
+├── packages/
+│   ├── core/          # Core DSL and rendering
+│   ├── aws/           # AWS services
+│   ├── azure/         # Azure services
+│   ├── gcp/           # Google Cloud services
+│   ├── react/         # React components
+│   └── cli/           # Command-line tool
+├── examples/          # Usage examples
+├── docs/             # Documentation
+└── TUTORIAL.md       # Complete user guide
+```
+
+## 📊 Performance
+
+- **Fast Rendering**: Optimized Mermaid.js integration
+- **Large Diagrams**: Supports 100+ nodes with manual layout
+- **Memory Efficient**: Minimal overhead and cleanup utilities
+- **Type Safety**: Full TypeScript support with zero runtime errors
+
+## 🔧 Configuration
+
+### Environment Setup
+
+```javascript
+// cloud-diagrams.config.js
+module.exports = {
+  defaultProvider: 'aws',
+  theme: 'default',
+  exportFormats: ['svg', 'png'],
+  mermaid: {
+    theme: 'default',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+    },
+  },
+};
+```
+
+### CI/CD Integration
+
+```yaml
+# GitHub Actions example
+- name: Generate Architecture Diagrams
+  run: |
+    npm install -g @cloud-diagrams/cli
+    cloud-diagrams generate src/architecture.ts -o docs/architecture.svg
+```
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+**Module Resolution Errors**
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
+npm install @cloud-diagrams/core @cloud-diagrams/aws
 ```
 
-## 🤝 Contributing
+**Mermaid Rendering Issues**
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+```typescript
+// For large diagrams, use manual layout
+if (diagram.getNodes().length > 50) {
+  diagram.setLayout('manual');
+}
+```
 
-### Adding New Services
+**CLI Command Not Found**
 
-1. Create service class in appropriate package
-2. Add to service index exports
-3. Write tests for the service
-4. Update documentation
+```bash
+npm install -g @cloud-diagrams/cli
+```
 
-### Adding New Providers
+See the [complete troubleshooting guide](./TUTORIAL.md#troubleshooting) for more solutions.
 
-1. Create new package (e.g., `@cloud-diagrams/oracle`)
-2. Implement provider-specific services
-3. Follow existing patterns from AWS package
-4. Add comprehensive tests
+## 📈 Roadmap
 
-## 📚 Documentation
+### Next Features
 
-**📖 [Complete Documentation](./docs/README.md)** - Comprehensive guides and references
+- **Enhanced Export**: More format options and customization
+- **Visual Editor**: Drag-and-drop diagram builder
+- **More Providers**: Support for additional cloud platforms
+- **Plugin System**: Extensible architecture for community contributions
 
-### Quick Links
+### Community
 
-| Resource                                           | Description                                |
-| -------------------------------------------------- | ------------------------------------------ |
-| **[🎯 Quick Start](./docs/quick-start.md)**        | Get up and running in 5 minutes            |
-| **[🟠 AWS Services](./docs/providers/aws.md)**     | Complete AWS service catalog with examples |
-| **[💻 CLI Tool](./docs/cli/README.md)**            | Command-line interface documentation       |
-| **[⚛️ React Integration](./docs/react/README.md)** | React components and hooks                 |
-| **[🔄 CI/CD Integration](./docs/ci-cd.md)**        | Automated diagram generation               |
-
-## 🗺️ Roadmap
-
-### ✅ **Phase 1: Foundation** (Completed)
-
-- Core DSL implementation
-- AWS services library
-- Mermaid.js rendering engine
-- Interactive features
-- Export capabilities
-
-### 🚧 **Phase 2: Enhancement** (In Progress)
-
-- [ ] Enhanced icon system with official cloud icons
-- [ ] Advanced layout options
-- [ ] Improved group visualization
-- [ ] Azure services implementation
-- [ ] GCP services implementation
-
-### 🔮 **Phase 3: Advanced Features** (Planned)
-
-- [ ] React component library
-- [ ] CLI tool for CI/CD integration
-- [ ] Pan and zoom functionality
-- [ ] Live diagram editing
-- [ ] Documentation site with playground
-
-## 🏆 Why Cloud Diagrams TypeScript?
-
-### **vs. Traditional Diagramming Tools**
-
-- ✅ **Version Control**: Diagrams are code, stored in git
-- ✅ **Automation**: Generate diagrams from infrastructure code
-- ✅ **Consistency**: Standardized icons and layouts
-- ✅ **Collaboration**: Code reviews for diagram changes
-
-### **vs. Python Diagrams**
-
-- ✅ **Type Safety**: Full TypeScript support with IDE features
-- ✅ **Interactive**: Browser-native with click handlers and themes
-- ✅ **Modern**: No external dependencies or server required
-- ✅ **Web Integration**: Easy embedding in web applications
-
-### **vs. Manual Drawing**
-
-- ✅ **Maintainable**: Update code, not pixels
-- ✅ **Scalable**: Handle complex architectures programmatically
-- ✅ **Professional**: Consistent, high-quality output
-- ✅ **Efficient**: Rapid iteration and updates
+- **Discord Server**: Join our community for support and discussions
+- **Contributor Program**: Recognition for community contributions
+- **Documentation Site**: Comprehensive docs with interactive examples
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Inspired by [Mingrammer's Diagrams](https://diagrams.mingrammer.com/)
-- Powered by [Mermaid.js](https://mermaid.js.org/)
-- Built with [TypeScript](https://www.typescriptlang.org/)
+- **Mermaid.js** - Powerful diagramming library
+- **Cloud Providers** - Official icons and styling guidelines
+- **Open Source Community** - Contributors and feedback
+
+## 📞 Support
+
+- **GitHub Issues**: [Report bugs and request features](https://github.com/amaboh/kloud_diagramming/issues)
+- **Discussions**: [Ask questions and share ideas](https://github.com/amaboh/kloud_diagramming/discussions)
+- **Documentation**: [Complete tutorial and guides](./TUTORIAL.md)
 
 ---
 
-**Made with ❤️ for the cloud development community**
+<div align="center">
 
-[🌟 Star us on GitHub](https://github.com/your-org/cloud-diagrams-ts) | [📖 Read the Docs](https://cloud-diagrams-ts.dev) | [💬 Join Discussions](https://github.com/your-org/cloud-diagrams-ts/discussions)
+**Made with ❤️ by [amaboh](https://github.com/amaboh)**
+
+**Star ⭐ this repo if you find it helpful!**
+
+</div>

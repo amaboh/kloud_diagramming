@@ -16,6 +16,28 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
+  "keywords": [
+    "cloud",
+    "diagrams",
+    "aws",
+    "azure",
+    "gcp",
+    "architecture",
+    "typescript",
+    "mermaid",
+    "infrastructure"
+  ],
+  "author": "amaboh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amaboh/kloud_diagramming.git",
+    "directory": "cloud-diagrams-ts/packages/core"
+  },
+  "homepage": "https://github.com/amaboh/kloud_diagramming#readme",
+  "bugs": {
+    "url": "https://github.com/amaboh/kloud_diagramming/issues"
+  },
   "dependencies": {
     "mermaid": "^10.6.0",
     "uuid": "^9.0.0"
@@ -27,5 +49,8 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

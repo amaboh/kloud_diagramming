@@ -1,0 +1,32 @@
+{
+  "name": "@cloud-diagrams/quick-start-example",
+  "version": "1.0.0",
+  "description": "Quick start example for @cloud-diagrams",
+  "private": true,
+  "main": "basic-architecture.ts",
+  "scripts": {
+    "start": "ts-node basic-architecture.ts",
+    "build": "tsc basic-architecture.ts",
+    "dev": "ts-node-dev --respawn basic-architecture.ts"
+  },
+  "dependencies": {
+    "@cloud-diagrams/core": "^0.1.0",
+    "@cloud-diagrams/aws": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "ts-node-dev": "^2.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "cloud",
+    "diagrams",
+    "aws",
+    "architecture",
+    "typescript",
+    "example"
+  ],
+  "author": "amaboh",
+  "license": "MIT"
+}
