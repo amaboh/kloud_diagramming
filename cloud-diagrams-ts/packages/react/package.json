@@ -1,6 +1,6 @@
 {
   "name": "@cloud-diagrams/react",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "React components for cloud architecture diagrams",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -36,34 +36,34 @@
     "url": "https://github.com/amaboh/kloud_diagramming/issues"
   },
   "dependencies": {
-    "@cloud-diagrams/core": "^0.1.0",
-    "@cloud-diagrams/aws": "^0.1.0",
-    "@cloud-diagrams/azure": "^0.2.0",
-    "@cloud-diagrams/gcp": "^0.2.0"
+    "@cloud-diagrams/aws": "^0.2.1",
+    "@cloud-diagrams/azure": "^0.2.1",
+    "@cloud-diagrams/core": "^0.2.1",
+    "@cloud-diagrams/gcp": "^0.2.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/user-event": "^14.4.3",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
-    "@types/jest": "^29.5.0",
-    "typescript": "^5.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rollup": "^3.21.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
-    "@rollup/plugin-commonjs": "^24.1.0",
-    "@rollup/plugin-typescript": "^11.1.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"
