@@ -6,7 +6,7 @@ This interactive web viewer allows you to visualize and explore cloud architectu
 
 ## 🚀 Quick Start
 
-### Option 1: Simple Node.js Server (Recommended)
+### Option 1: Node.js Server (Recommended)
 
 ```bash
 # Navigate to the web viewer directory
@@ -19,20 +19,28 @@ node server.js
 # http://localhost:3000
 ```
 
-### Option 2: Python Simple Server
+### Option 2: Alternative Static Servers
+
+If you prefer other static server options:
 
 ```bash
 # Navigate to the web viewer directory
 cd cloud-diagrams-ts/examples/web-viewer
 
-# Python 3
+# Python 3 (simple HTTP server)
 python -m http.server 3000
 
-# Python 2
+# Python 2 (legacy)
 python -m SimpleHTTPServer 3000
+
+# Node.js alternatives
+npx serve . -p 3000
+npx http-server . -p 3000
 
 # Open browser at http://localhost:3000
 ```
+
+**Note**: The included `server.js` is the recommended option as it provides proper MIME types and error handling.
 
 ### Option 3: Live Server (VS Code Extension)
 

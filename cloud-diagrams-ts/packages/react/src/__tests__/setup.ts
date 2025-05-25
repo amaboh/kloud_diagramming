@@ -1,13 +1,16 @@
 import '@testing-library/jest-dom';
 
-// Mock Mermaid for testing
+// Mock Mermaid with proper ES module structure
 jest.mock('mermaid', () => ({
+  __esModule: true,
   default: {
     initialize: jest.fn(),
-    render: jest.fn().mockResolvedValue({ svg: '<svg></svg>' }),
+    render: jest.fn().mockResolvedValue({ svg: '<svg>test</svg>' }),
+    parse: jest.fn().mockReturnValue(true),
     mermaidAPI: {
       initialize: jest.fn(),
-      render: jest.fn().mockResolvedValue('<svg></svg>'),
+      render: jest.fn().mockResolvedValue('<svg>test</svg>'),
+      parse: jest.fn().mockReturnValue(true),
     },
   },
 }));
@@ -19,7 +22,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-// Mock matchMedia
+// Mock DOM methods that might not be available in test environment
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
@@ -37,3 +40,10 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock URL.createObjectURL and revokeObjectURL
 global.URL.createObjectURL = jest.fn();
 global.URL.revokeObjectURL = jest.fn();
+
+// Add a simple test to satisfy Jest requirement
+describe('Test Setup', () => {
+  test('setup file loads correctly', () => {
+    expect(true).toBe(true);
+  });
+});

@@ -6,9 +6,16 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
+  moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@cloud-diagrams/(.*)$': '<rootDir>/../$1/src',
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
   },
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   transformIgnorePatterns: ['node_modules/(?!(chalk|ora|commander)/)'],
