@@ -1,0 +1,118 @@
+{
+  "name": "@cloud-diagrams/core",
+  "version": "0.2.1",
+  "description": "A complete Mingrammer-style cloud architecture diagramming library for JavaScript/TypeScript with D3.js integration. Create professional cloud architecture diagrams with 1,100+ official cloud service icons from AWS, Azure, and GCP.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs",
+    "examples"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build:lib && npm run build:types",
+    "build:lib": "rollup -c",
+    "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
+    "clean": "rm -rf dist",
+    "dev": "rollup -c --watch",
+    "demo": "npx http-server examples -p 8080 -o",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.{js,ts,json,md}",
+    "format:check": "prettier --check src/**/*.{js,ts,json,md}",
+    "serve": "npx http-server . -p 3000",
+    "serve:dist": "npx http-server dist -p 3001",
+    "validate": "npm run lint && npm run test && npm run build",
+    "prepublishOnly": "npm run validate",
+    "start": "npm run demo",
+    "docs:serve": "npx http-server docs -p 8081 -o",
+    "size-check": "bundlesize"
+  },
+  "keywords": [
+    "cloud-diagrams",
+    "mingrammer",
+    "d3js",
+    "cloud",
+    "aws",
+    "azure",
+    "gcp",
+    "icons",
+    "visualization",
+    "diagrams",
+    "architecture",
+    "infrastructure",
+    "devops",
+    "typescript",
+    "javascript",
+    "react",
+    "vue",
+    "angular",
+    "nextjs",
+    "svg",
+    "export",
+    "interactive"
+  ],
+  "author": {
+    "name": "amaboh",
+    "email": "amaboh@github.com",
+    "url": "https://github.com/amaboh"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^7.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/d3": "^7.4.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "bundlesize": "^0.18.1",
+    "eslint": "^8.45.0",
+    "http-server": "^14.1.1",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "rollup": "^3.26.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "d3": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amaboh/kloud_diagramming.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amaboh/kloud_diagramming/issues"
+  },
+  "homepage": "https://github.com/amaboh/kloud_diagramming#readme",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/amaboh"
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/index.esm.js",
+      "maxSize": "50 kB"
+    },
+    {
+      "path": "./dist/index.umd.js",
+      "maxSize": "55 kB"
+    }
+  ]
+}

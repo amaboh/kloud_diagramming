@@ -1,526 +1,696 @@
-# 🏗️ Cloud Diagrams for React
+# @kloud-diagramming/core
 
-> **Create interactive cloud architecture diagrams in React applications with TypeScript**
+A complete **Mingrammer-style cloud architecture diagramming library** for JavaScript/TypeScript with D3.js integration. Create professional cloud architecture diagrams with 1,100+ official cloud service icons from AWS, Azure, and GCP.
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/amaboh/kloud_diagramming)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18+-61dafb)](https://reactjs.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![npm version](https://badge.fury.io/js/@kloud-diagramming%2Fcore.svg)](https://badge.fury.io/js/@kloud-diagramming%2Fcore)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Build beautiful, interactive cloud architecture diagrams directly in your React applications. Perfect for documentation, presentations, and real-time infrastructure visualization.
+## 🌟 Features
 
-## 🚀 Quick Start for React Developers
+- **🎯 Mingrammer-style API** - Familiar syntax for Python Mingrammer users
+- **☁️ 1,100+ Official Icons** - AWS (306+), Azure (588+), GCP (210+) service icons
+- **🎨 Professional D3.js Rendering** - SVG rendering with interactive features
+- **📦 Cluster Support** - Visual grouping with nested clusters
+- **🔗 Styled Edges** - Multiple line styles, arrows, and colors
+- **⚡ Interactive** - Zoom, pan, tooltips, and click events
+- **📱 Framework Agnostic** - Works with React, Vue, Angular, or vanilla JS
+- **🚀 TypeScript Ready** - Full TypeScript support with type definitions
+- **📤 Export Capabilities** - SVG export functionality
+- **🎭 Multiple Layout Algorithms** - Hierarchical, force-directed, and manual layouts
 
-### 1. **Create React App** (Fastest Start)
-
-```bash
-# Create a new React app
-npx create-react-app my-cloud-diagrams --template typescript
-cd my-cloud-diagrams
-
-# Install cloud diagrams packages
-npm install @cloud-diagrams/core @cloud-diagrams/aws @cloud-diagrams/react
-
-# Start developing
-npm start
-```
-
-### 2. **Next.js App** (Production Ready)
+## 📦 Installation
 
 ```bash
-# Create Next.js app
-npx create-next-app@latest my-cloud-diagrams --typescript --tailwind --eslint
-cd my-cloud-diagrams
-
-# Install cloud diagrams packages
-npm install @cloud-diagrams/core @cloud-diagrams/aws @cloud-diagrams/react
-
-# Start developing
-npm run dev
+npm install @kloud-diagramming/core d3
 ```
-
-### 3. **Vite + React** (Lightning Fast)
 
 ```bash
-# Create Vite app
-npm create vite@latest my-cloud-diagrams -- --template react-ts
-cd my-cloud-diagrams
-
-# Install dependencies
-npm install
-npm install @cloud-diagrams/core @cloud-diagrams/aws @cloud-diagrams/react
-
-# Start developing
-npm run dev
+yarn add @kloud-diagramming/core d3
 ```
 
-## ⚡ Your First Diagram in React
-
-Replace your `src/App.tsx` with this simple example:
-
-```tsx
-import React from "react";
-import { DiagramRenderer, DiagramProvider } from "@cloud-diagrams/react";
-import { Diagram } from "@cloud-diagrams/core";
-import { EC2, RDS } from "@cloud-diagrams/aws";
-
-function createMyArchitecture() {
-  const diagram = new Diagram("My First Cloud Architecture");
-
-  // Create cloud resources
-  const webServer = new EC2("web-server", {
-    label: "Web Server\n(t3.medium)",
-    metadata: { instanceType: "t3.medium" },
-  });
-
-  const database = new RDS("database", {
-    label: "PostgreSQL\n(db.t3.micro)",
-    metadata: { engine: "postgresql" },
-  });
-
-  // Add to diagram and connect
-  diagram.addNode(webServer);
-  diagram.addNode(database);
-  diagram.connect(webServer, database, { label: "SQL queries" });
-
-  return diagram;
-}
-
-function App() {
-  const diagram = createMyArchitecture();
-
-  return (
-    <DiagramProvider>
-      <div style={{ padding: "20px" }}>
-        <h1>🏗️ My Cloud Architecture</h1>
-        <DiagramRenderer
-          diagram={diagram}
-          theme="default"
-          width={800}
-          height={400}
-          interactive
-        />
-      </div>
-    </DiagramProvider>
-  );
-}
-
-export default App;
+```bash
+pnpm add @kloud-diagramming/core d3
 ```
 
-**🎉 That's it! Run `npm start` and see your interactive cloud diagram at http://localhost:3000**
+## 🚀 Quick Start
 
-## 🎯 Multiple Ways to Use the Library
+### Basic Usage
 
-### **Approach 1: Simple Component Usage** (Recommended for beginners)
+```javascript
+import { Diagram, CloudDiagramsD3Renderer, EC2, S3, Lambda, RDS } from "@kloud-diagramming/core";
 
-```tsx
-import { DiagramRenderer } from "@cloud-diagrams/react";
-import { createSimpleArchitecture } from "./diagrams/simple";
+// Create a new diagram
+const diagram = new Diagram("My Cloud Architecture");
 
-function MyPage() {
-  return (
-    <div>
-      <h2>Our Infrastructure</h2>
-      <DiagramRenderer
-        diagram={createSimpleArchitecture()}
-        theme="light"
-        interactive
-      />
-    </div>
-  );
-}
+// Create cloud service nodes
+const web = new EC2("web", "Web Server");
+const api = new Lambda("api", "API Function");
+const db = new RDS("db", "Database");
+const storage = new S3("storage", "File Storage");
+
+// Add nodes to diagram
+diagram.addNode(web);
+diagram.addNode(api);
+diagram.addNode(db);
+diagram.addNode(storage);
+
+// Connect nodes using Mingrammer-style operators
+diagram.rightShift([web], [api]); // web >> api
+diagram.rightShift([api], [db, storage]); // api >> [db, storage]
+
+// Render the diagram
+const renderer = new CloudDiagramsD3Renderer("diagram-container", {
+    width: 1000,
+    height: 600,
+    layoutAlgorithm: 'hierarchical'
+});
+renderer.renderDiagram(diagram);
 ```
 
-### **Approach 2: Hook-Based State Management** (For dynamic diagrams)
+### Browser Usage (UMD)
 
-```tsx
-import { useDiagram, useTheme } from "@cloud-diagrams/react";
-import { EC2, RDS } from "@cloud-diagrams/aws";
-
-function InteractiveDiagram() {
-  const { diagram, addNode, connect } = useDiagram("My Architecture");
-  const { theme, toggleTheme } = useTheme();
-
-  const addWebServer = () => {
-    const server = new EC2("web-" + Date.now(), { label: "New Web Server" });
-    addNode(server);
-  };
-
-  return (
-    <div>
-      <button onClick={addWebServer}>Add Web Server</button>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-      <DiagramRenderer diagram={diagram} theme={theme} />
-    </div>
-  );
-}
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Architecture Diagram</title>
+</head>
+<body>
+    <div id="diagram-container"></div>
+    
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load @kloud-diagramming/core -->
+    <script src="https://unpkg.com/@kloud-diagramming/core/dist/index.umd.js"></script>
+    
+    <script>
+        const { Diagram, CloudDiagramsD3Renderer, EC2, S3, RDS } = KloudDiagramming;
+        
+        // Create diagram
+        const diagram = new Diagram("Simple AWS Architecture");
+        
+        // Add services
+        const web = new EC2("web", "Web Server");
+        const db = new RDS("db", "Database");
+        const storage = new S3("storage", "Storage");
+        
+        diagram.addNode(web);
+        diagram.addNode(db);
+        diagram.addNode(storage);
+        
+        // Connect services
+        diagram.rightShift([web], [db, storage]);
+        
+        // Render
+        const renderer = new CloudDiagramsD3Renderer("diagram-container", {
+            width: 800,
+            height: 400,
+            layoutAlgorithm: 'hierarchical'
+        });
+        renderer.renderDiagram(diagram);
+    </script>
+</body>
+</html>
 ```
 
-### **Approach 3: Context Provider Pattern** (For complex apps)
+### With Clusters
 
-```tsx
-import { DiagramProvider, useDiagramContext } from "@cloud-diagrams/react";
+```javascript
+import { Diagram, CloudDiagramsD3Renderer, EC2, Lambda, RDS, Cluster } from "@kloud-diagramming/core";
 
-function DiagramControls() {
-  const { diagram, updateDiagram, exportDiagram } = useDiagramContext();
+const diagram = new Diagram("Clustered Architecture");
 
-  return (
-    <div>
-      <button onClick={() => exportDiagram("svg")}>Export SVG</button>
-      <button onClick={() => exportDiagram("png")}>Export PNG</button>
-    </div>
-  );
-}
+// Create a cluster
+const webTier = new Cluster("web-tier", "Web Tier", {
+    style: "rounded",
+    bgcolor: "#e3f2fd",
+    color: "#2196f3",
+});
 
-function App() {
-  return (
-    <DiagramProvider>
-      <DiagramControls />
-      <DiagramRenderer />
-    </DiagramProvider>
-  );
-}
+// Create nodes
+const web1 = new EC2("web1", "Web Server 1");
+const web2 = new EC2("web2", "Web Server 2");
+const api = new Lambda("api", "API Service");
+const db = new RDS("db", "Database");
+
+// Add nodes to cluster
+webTier.addNode(web1);
+webTier.addNode(web2);
+
+// Add cluster and nodes to diagram
+diagram.addCluster(webTier);
+diagram.addNode(api);
+diagram.addNode(db);
+
+// Create connections
+diagram.rightShift([web1, web2], [api]);
+diagram.rightShift([api], [db]);
+
+// Render
+const renderer = new CloudDiagramsD3Renderer("container", {
+    layoutAlgorithm: 'hierarchical',
+    nodeSpacing: 150
+});
+renderer.renderDiagram(diagram);
 ```
 
-### **Approach 4: Custom Hooks** (For reusable logic)
+### React Integration
 
-```tsx
-import { useState, useEffect } from "react";
-import { Diagram } from "@cloud-diagrams/core";
+```jsx
+import React, { useEffect, useRef } from "react";
+import { Diagram, CloudDiagramsD3Renderer, EC2, S3 } from "@kloud-diagramming/core";
 
-function useCloudArchitecture(architectureType: string) {
-  const [diagram, setDiagram] = useState<Diagram | null>(null);
-  const [loading, setLoading] = useState(true);
+function CloudDiagram() {
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    async function loadArchitecture() {
-      const { createArchitecture } = await import(
-        `./architectures/${architectureType}`
-      );
-      setDiagram(createArchitecture());
-      setLoading(false);
-    }
-    loadArchitecture();
-  }, [architectureType]);
+    const diagram = new Diagram("React Cloud Architecture");
 
-  return { diagram, loading };
+    const web = new EC2("web", "Web Server");
+    const storage = new S3("storage", "Storage");
+
+    diagram.addNode(web);
+    diagram.addNode(storage);
+    diagram.rightShift([web], [storage]);
+
+    // Render to the container
+    const renderer = new CloudDiagramsD3Renderer(containerRef.current, {
+        width: 800,
+        height: 400,
+        layoutAlgorithm: 'force'
+    });
+    renderer.renderDiagram(diagram);
+  }, []);
+
+  return <div ref={containerRef} style={{ width: "100%", height: "500px" }} />;
 }
-
-// Usage
-function ArchitecturePage({ type }: { type: string }) {
-  const { diagram, loading } = useCloudArchitecture(type);
-
-  if (loading) return <div>Loading architecture...</div>;
-
-  return <DiagramRenderer diagram={diagram} />;
-}
 ```
 
-## 🏗️ Project Structure Recommendations
+### Next.js Integration
 
-### **Option 1: Simple Structure** (Small projects)
+```jsx
+// pages/diagram.js
+import dynamic from "next/dynamic";
 
-```
-src/
-├── App.tsx
-├── components/
-│   └── DiagramViewer.tsx
-├── diagrams/
-│   ├── simple-web-app.ts
-│   ├── microservices.ts
-│   └── data-pipeline.ts
-└── index.tsx
-```
+const CloudDiagram = dynamic(() => import("../components/CloudDiagram"), {
+  ssr: false, // Disable server-side rendering for D3.js
+});
 
-### **Option 2: Feature-Based** (Medium projects)
-
-```
-src/
-├── features/
-│   ├── architecture/
-│   │   ├── components/
-│   │   │   ├── ArchitectureDiagram.tsx
-│   │   │   └── DiagramControls.tsx
-│   │   ├── diagrams/
-│   │   │   ├── aws-3tier.ts
-│   │   │   └── azure-microservices.ts
-│   │   └── hooks/
-│   │       └── useArchitecture.ts
-│   └── dashboard/
-├── shared/
-│   ├── components/
-│   └── utils/
-└── App.tsx
-```
-
-### **Option 3: Domain-Driven** (Large projects)
-
-```
-src/
-├── domains/
-│   ├── infrastructure/
-│   │   ├── components/
-│   │   ├── diagrams/
-│   │   └── services/
-│   ├── monitoring/
-│   └── deployment/
-├── shared/
-│   ├── diagram-components/
-│   ├── hooks/
-│   └── providers/
-└── App.tsx
-```
-
-## 🎨 Styling & Theming
-
-### **Built-in Themes**
-
-```tsx
-<DiagramRenderer
-  diagram={diagram}
-  theme="light" // or "dark", "aws", "azure", "gcp"
-  width={1000}
-  height={600}
-/>
-```
-
-### **Custom Styling with CSS Modules**
-
-```tsx
-// DiagramViewer.module.css
-.diagramContainer {
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  padding: 20px;
-  background: #f8f9fa;
-}
-
-.darkTheme {
-  background: #1a1a1a;
-  border-color: #333;
-}
-
-// DiagramViewer.tsx
-import styles from './DiagramViewer.module.css';
-
-function DiagramViewer({ diagram, isDark }) {
+export default function DiagramPage() {
   return (
-    <div className={`${styles.diagramContainer} ${isDark ? styles.darkTheme : ''}`}>
-      <DiagramRenderer diagram={diagram} />
+    <div>
+      <h1>My Cloud Architecture</h1>
+      <CloudDiagram />
     </div>
   );
 }
 ```
 
-### **Styled Components Integration**
+### Vue.js Integration
 
-```tsx
-import styled from "styled-components";
+```vue
+<template>
+  <div>
+    <h1>Cloud Architecture</h1>
+    <div ref="diagramContainer" class="diagram-container"></div>
+  </div>
+</template>
 
-const DiagramContainer = styled.div`
-  border: 2px solid ${(props) => props.theme.borderColor};
-  border-radius: 8px;
-  padding: 20px;
-  background: ${(props) => props.theme.background};
+<script>
+import { Diagram, CloudDiagramsD3Renderer, EC2, S3, RDS } from "@kloud-diagramming/core";
 
-  .diagram-node {
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: scale(1.05);
+export default {
+  name: "CloudDiagram",
+  mounted() {
+    this.renderDiagram();
+  },
+  methods: {
+    renderDiagram() {
+      const diagram = new Diagram("Vue Cloud Architecture");
+      
+      const web = new EC2("web", "Web Server");
+      const db = new RDS("db", "Database");
+      const storage = new S3("storage", "Storage");
+      
+      diagram.addNode(web);
+      diagram.addNode(db);
+      diagram.addNode(storage);
+      
+      diagram.rightShift([web], [db, storage]);
+      
+      const renderer = new CloudDiagramsD3Renderer(this.$refs.diagramContainer, {
+        width: 800,
+        height: 400,
+        layoutAlgorithm: 'hierarchical'
+      });
+      renderer.renderDiagram(diagram);
     }
   }
-`;
+};
+</script>
 
-function StyledDiagram({ diagram }) {
-  return (
-    <DiagramContainer>
-      <DiagramRenderer diagram={diagram} />
-    </DiagramContainer>
-  );
+<style>
+.diagram-container {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
+</style>
 ```
 
-## 📦 Available Packages
+## 🎨 Styling and Layout
 
-| Package                   | Description                          | Installation                        |
-| ------------------------- | ------------------------------------ | ----------------------------------- |
-| **@cloud-diagrams/core**  | Core library with diagram DSL        | `npm install @cloud-diagrams/core`  |
-| **@cloud-diagrams/aws**   | AWS services (EC2, RDS, S3, etc.)    | `npm install @cloud-diagrams/aws`   |
-| **@cloud-diagrams/azure** | Azure services (VMs, SQL, Functions) | `npm install @cloud-diagrams/azure` |
-| **@cloud-diagrams/gcp**   | Google Cloud services                | `npm install @cloud-diagrams/gcp`   |
-| **@cloud-diagrams/react** | React components and hooks           | `npm install @cloud-diagrams/react` |
+### Layout Algorithms
 
-## 🔧 Development Tools
+```javascript
+// Hierarchical layout (default)
+const renderer = new CloudDiagramsD3Renderer("container", {
+    layoutAlgorithm: 'hierarchical',
+    nodeSpacing: 150,
+    levelSpacing: 100
+});
 
-### **TypeScript Support**
+// Force-directed layout
+const renderer = new CloudDiagramsD3Renderer("container", {
+    layoutAlgorithm: 'force',
+    forceStrength: -300,
+    linkDistance: 100
+});
 
-Full TypeScript support with IntelliSense:
+// Manual positioning
+const renderer = new CloudDiagramsD3Renderer("container", {
+    layoutAlgorithm: 'manual'
+});
 
-```tsx
-import { Diagram } from "@cloud-diagrams/core";
-import { EC2, RDS } from "@cloud-diagrams/aws";
+// Set manual positions
+web.setPosition(100, 100);
+db.setPosition(300, 100);
+```
 
-// Full type safety and autocompletion
-const diagram = new Diagram("My Architecture");
-const server = new EC2("web-server", {
-  label: "Web Server",
-  instanceType: "t3.medium", // TypeScript will validate this
-  metadata: {
-    availabilityZone: "us-east-1a",
-    securityGroups: ["sg-12345"],
-  },
+### Custom Edge Styles
+
+```javascript
+// Create custom edges with styling
+const edge = diagram.connect(web, api, {
+  label: "HTTPS",
+  color: "#4CAF50",
+  style: "dashed",
+  strokeWidth: 2
+});
+
+// Using Edge builder for complex styling
+import { EdgeBuilder } from "@kloud-diagramming/core";
+
+const styledEdge = new EdgeBuilder()
+    .from(web)
+    .to(api)
+    .label("API Calls")
+    .color("#2196F3")
+    .style("solid")
+    .arrowhead("diamond")
+    .build();
+
+diagram.addEdge(styledEdge);
+```
+
+### Cluster Styling
+
+```javascript
+const cluster = new Cluster("prod-env", "Production Environment", {
+  style: "filled",
+  bgcolor: "#fff3e0",
+  color: "#ff9900",
+  fontcolor: "#e65100",
+  penwidth: 2,
+  borderRadius: 10
 });
 ```
 
-### **Hot Reload Development**
+## 📚 API Reference
 
-Changes to your diagrams update instantly:
+### Core Classes
 
-```tsx
-// Edit this file and see changes immediately
-function createDevelopmentArchitecture() {
-  const diagram = new Diagram("Development Environment");
+#### `Diagram`
 
-  // Add/remove/modify services here
-  const devServer = new EC2("dev-server", { label: "Development Server" });
-  const testDb = new RDS("test-db", { label: "Test Database" });
+Main diagram class for creating cloud architecture diagrams.
 
-  diagram.addNode(devServer);
-  diagram.addNode(testDb);
-  diagram.connect(devServer, testDb);
+```typescript
+class Diagram {
+  constructor(title: string, config?: DiagramConfig);
 
-  return diagram;
+  // Node management
+  addNode(node: Node): void;
+  removeNode(nodeId: string): void;
+  getNode(nodeId: string): Node | undefined;
+  getAllNodes(): Node[];
+
+  // Cluster management
+  addCluster(cluster: Cluster): void;
+  removeCluster(clusterId: string): void;
+  getCluster(clusterId: string): Cluster | undefined;
+
+  // Edge management
+  addEdge(edge: Edge): void;
+  connect(from: Node, to: Node, options?: EdgeOptions): Edge;
+
+  // Mingrammer-style operators
+  rightShift(from: Node | Node[], to: Node | Node[]): Edge[]; // >>
+  leftShift(from: Node | Node[], to: Node | Node[]): Edge[]; // <<
+  undirected(from: Node | Node[], to: Node | Node[]): Edge[]; // -
+
+  // Utility methods
+  getStatistics(): DiagramStatistics;
+  validate(): ValidationResult;
+  clear(): void;
 }
 ```
 
-### **Export Functionality**
+#### `CloudDiagramsD3Renderer`
 
-```tsx
-import { useExport } from "@cloud-diagrams/react";
+D3.js-based renderer for creating interactive SVG diagrams.
 
-function ExportControls() {
-  const { exportDiagram } = useExport();
+```typescript
+class CloudDiagramsD3Renderer {
+  constructor(
+    container: string | HTMLElement,
+    options?: RenderOptions
+  );
 
-  const handleExport = async (format: "svg" | "png" | "pdf") => {
-    try {
-      const result = await exportDiagram(format);
-      // Download or use the exported diagram
-    } catch (error) {
-      console.error("Export failed:", error);
+  // Rendering
+  renderDiagram(diagram: Diagram): Promise<void>;
+  updateDiagram(diagram: Diagram): Promise<void>;
+  clear(): void;
+
+  // Export
+  exportSVG(): string;
+  exportPNG(options?: ExportOptions): Promise<Blob>;
+
+  // Interaction
+  enableZoom(enabled: boolean): void;
+  enablePan(enabled: boolean): void;
+  fitToContainer(): void;
+  
+  // Events
+  on(event: string, callback: Function): void;
+  off(event: string, callback?: Function): void;
+}
+```
+
+#### `Node`
+
+Base class for all cloud service nodes.
+
+```typescript
+class Node {
+  constructor(
+    id: string,
+    label: string,
+    provider: CloudProvider,
+    service: string,
+    options?: NodeOptions
+  );
+
+  // Properties
+  getId(): string;
+  getLabel(): string;
+  getProvider(): CloudProvider;
+  getService(): string;
+  getCategory(): string;
+  
+  // Positioning
+  setPosition(x: number, y: number): void;
+  getPosition(): { x: number; y: number };
+  
+  // Styling
+  setStyle(style: NodeStyle): void;
+  getStyle(): NodeStyle;
+  
+  // Metadata
+  setMetadata(key: string, value: any): void;
+  getMetadata(key?: string): any;
+}
+```
+
+### Service Classes
+
+#### AWS Services
+
+```javascript
+import { 
+  EC2, S3, Lambda, RDS, ELB, VPC, CloudFront, 
+  APIGateway, DynamoDB, SNS, SQS, CloudWatch 
+} from '@kloud-diagramming/core';
+
+// Compute
+const compute = new EC2('web', 'Web Server');
+const serverless = new Lambda('api', 'API Function');
+
+// Storage
+const storage = new S3('data', 'Data Bucket');
+
+// Database
+const database = new RDS('db', 'Database');
+const nosql = new DynamoDB('cache', 'Cache');
+
+// Networking
+const loadBalancer = new ELB('lb', 'Load Balancer');
+const vpc = new VPC('vpc', 'Virtual Private Cloud');
+const cdn = new CloudFront('cdn', 'CDN');
+const api = new APIGateway('api-gw', 'API Gateway');
+
+// Messaging
+const notifications = new SNS('sns', 'Notifications');
+const queue = new SQS('queue', 'Message Queue');
+
+// Monitoring
+const monitoring = new CloudWatch('cw', 'CloudWatch');
+```
+
+#### Azure Services
+
+```javascript
+import {
+  VirtualMachine, BlobStorage, SQLDatabase, FunctionApps,
+  AppService, ApplicationGateway, VirtualNetwork, CosmosDB,
+  ServiceBus, KeyVault, Monitor, ContainerInstances
+} from '@kloud-diagramming/core';
+
+// Compute
+const vm = new VirtualMachine('web', 'Web VM');
+const functions = new FunctionApps('api', 'Functions');
+const webapp = new AppService('app', 'Web App');
+const containers = new ContainerInstances('containers', 'Containers');
+
+// Storage
+const blob = new BlobStorage('storage', 'Blob Storage');
+
+// Database
+const sql = new SQLDatabase('db', 'SQL Database');
+const cosmos = new CosmosDB('nosql', 'Cosmos DB');
+
+// Networking
+const appGateway = new ApplicationGateway('agw', 'App Gateway');
+const vnet = new VirtualNetwork('vnet', 'Virtual Network');
+
+// Security & Management
+const keyVault = new KeyVault('kv', 'Key Vault');
+const monitor = new Monitor('monitor', 'Monitor');
+
+// Messaging
+const serviceBus = new ServiceBus('sb', 'Service Bus');
+```
+
+#### GCP Services
+
+```javascript
+import {
+  ComputeEngine, CloudStorage, CloudSQL, CloudFunctions,
+  AppEngine, LoadBalancing, VPC as GCPVPC, Firestore,
+  PubSub, CloudRun, GKE, CloudMonitoring
+} from '@kloud-diagramming/core';
+
+// Compute
+const compute = new ComputeEngine('web', 'Compute Instance');
+const functions = new CloudFunctions('api', 'Cloud Functions');
+const appEngine = new AppEngine('app', 'App Engine');
+const cloudRun = new CloudRun('run', 'Cloud Run');
+const kubernetes = new GKE('k8s', 'GKE Cluster');
+
+// Storage
+const storage = new CloudStorage('data', 'Cloud Storage');
+
+// Database
+const sql = new CloudSQL('db', 'Cloud SQL');
+const firestore = new Firestore('nosql', 'Firestore');
+
+// Networking
+const loadBalancer = new LoadBalancing('lb', 'Load Balancer');
+const vpc = new GCPVPC('vpc', 'VPC Network');
+
+// Messaging & Monitoring
+const pubsub = new PubSub('pubsub', 'Pub/Sub');
+const monitoring = new CloudMonitoring('monitoring', 'Cloud Monitoring');
+```
+
+## 🔧 Advanced Features
+
+### Icon Management
+
+```javascript
+import { 
+  createIconRegistry, 
+  loadAwsIcons, loadAzureIcons, loadGcpIcons,
+  getAwsIconCount, areAwsIconsLoaded 
+} from '@kloud-diagramming/core';
+
+// Check icon loading status
+console.log('AWS icons loaded:', areAwsIconsLoaded());
+console.log('AWS icon count:', getAwsIconCount());
+
+// Load icons manually (usually automatic)
+await loadAwsIcons();
+await loadAzureIcons();
+await loadGcpIcons();
+
+// Create custom icon registry
+const customRegistry = createIconRegistry({
+  customIcons: {
+    'my-service': {
+      svg: '<svg>...</svg>',
+      metadata: {
+        name: 'My Custom Service',
+        category: 'Custom',
+        provider: 'custom'
+      }
     }
-  };
+  }
+});
+```
 
-  return (
-    <div>
-      <button onClick={() => handleExport("svg")}>Export SVG</button>
-      <button onClick={() => handleExport("png")}>Export PNG</button>
-      <button onClick={() => handleExport("pdf")}>Export PDF</button>
-    </div>
-  );
+### Event Handling
+
+```javascript
+// Listen for renderer events
+renderer.on('nodeClick', (event) => {
+  console.log('Clicked node:', event.node.getId());
+});
+
+renderer.on('nodeHover', (event) => {
+  console.log('Hovered node:', event.node.getLabel());
+});
+
+renderer.on('diagramReady', () => {
+  console.log('Diagram rendered successfully');
+});
+
+// Custom node interactions
+const webServer = new EC2('web', 'Web Server');
+webServer.setMetadata('onClick', () => {
+  window.open('https://console.aws.amazon.com/ec2');
+});
+```
+
+### Export Options
+
+```javascript
+// Export as SVG string
+const svgString = renderer.exportSVG();
+
+// Export as PNG blob
+const pngBlob = await renderer.exportPNG({
+  width: 1920,
+  height: 1080,
+  quality: 0.9,
+  backgroundColor: 'white'
+});
+
+// Download exported diagram
+function downloadDiagram(format = 'svg') {
+  const content = format === 'svg' ? 
+    renderer.exportSVG() : 
+    renderer.exportPNG();
+    
+  const blob = new Blob([content], { 
+    type: format === 'svg' ? 'image/svg+xml' : 'image/png' 
+  });
+  
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `diagram.${format}`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 ```
 
-## 🎯 Common Use Cases
+## 🔧 Configuration
 
-### **Documentation Sites** (Docusaurus, GitBook)
+### Diagram Configuration
 
-```tsx
-// Perfect for technical documentation
-function ArchitectureDoc({ diagramId }) {
-  const diagram = useMemo(() => loadDiagram(diagramId), [diagramId]);
-
-  return (
-    <div>
-      <h2>System Architecture</h2>
-      <DiagramRenderer
-        diagram={diagram}
-        theme="light"
-        width="100%"
-        height={400}
-      />
-    </div>
-  );
-}
+```javascript
+const diagram = new Diagram("My Architecture", {
+  direction: "TB", // Top to Bottom, LR (Left to Right), etc.
+  theme: "default", // default, dark, aws, azure, gcp
+  showGrid: true,
+  snapToGrid: false,
+  gridSize: 20
+});
 ```
 
-### **Admin Dashboards**
+### Render Options
 
-```tsx
-// Real-time infrastructure monitoring
-function InfrastructureDashboard() {
-  const { diagram, updateNodeStatus } = useInfrastructureMonitoring();
-
-  useEffect(() => {
-    // Update diagram based on real infrastructure status
-    const interval = setInterval(fetchInfrastructureStatus, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <DiagramRenderer
-      diagram={diagram}
-      interactive
-      onNodeClick={handleNodeClick}
-    />
-  );
-}
+```javascript
+const renderer = new CloudDiagramsD3Renderer("container", {
+  width: 1200,
+  height: 800,
+  layoutAlgorithm: 'hierarchical', // hierarchical, force, manual
+  nodeSpacing: 150,
+  levelSpacing: 100,
+  enableZoom: true,
+  enablePan: true,
+  enableTooltips: true,
+  theme: 'default',
+  backgroundColor: '#f5f5f5',
+  
+  // Force layout specific options
+  forceStrength: -300,
+  linkDistance: 100,
+  
+  // Animation options
+  animationDuration: 750,
+  enableAnimations: true
+});
 ```
 
-### **Presentation Apps**
+## 🌐 Browser Support
 
-```tsx
-// Interactive presentations
-function ArchitecturePresentation() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const diagrams = [webTierDiagram, appTierDiagram, dataTierDiagram];
-
-  return (
-    <div>
-      <DiagramRenderer
-        diagram={diagrams[currentSlide]}
-        theme="presentation"
-        width={1200}
-        height={800}
-      />
-      <button onClick={() => setCurrentSlide((prev) => prev + 1)}>
-        Next Slide
-      </button>
-    </div>
-  );
-}
-```
-
-## 📚 Learn More
-
-| Resource                                                                   | Description                 |
-| -------------------------------------------------------------------------- | --------------------------- |
-| **[📖 Complete Tutorial](./cloud-diagrams-ts/TUTORIAL.md)**                | Step-by-step React examples |
-| **[🎪 Live Demo](./cloud-diagrams-ts/examples/browser-demo/)**             | Interactive examples        |
-| **[🛠️ Development Setup](./cloud-diagrams-ts/DEVELOPMENT_SETUP_GUIDE.md)** | Local development guide     |
-| **[💻 CLI Tools](./cloud-diagrams-ts/CLI_USAGE_GUIDE.md)**                 | Command-line interface      |
-
-## 🤝 Community & Support
-
-- **💬 GitHub Discussions** - Ask questions and share examples
-- **🐛 Issues** - Report bugs and request features
-- **📖 Documentation** - Comprehensive guides and API reference
-- **🎯 Examples** - Real-world usage patterns
+- Chrome 60+
+- Firefox 55+
+- Safari 12+
+- Edge 79+
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## 📞 Support
+
+- 📖 [Documentation](https://github.com/amaboh/kloud_diagramming)
+- 🐛 [Issue Tracker](https://github.com/amaboh/kloud_diagramming/issues)
+- 💬 [Discussions](https://github.com/amaboh/kloud_diagramming/discussions)
+
+## 🙏 Acknowledgments
+
+- Inspired by [Mingrammer Diagrams](https://diagrams.mingrammer.com/) for Python
+- Built with [D3.js](https://d3js.org/) for powerful data visualization
+- Icons provided by AWS, Microsoft Azure, and Google Cloud Platform
 
 ---
 
-**🚀 Ready to build amazing cloud diagrams in React?**
-
-```bash
-npx create-react-app my-cloud-app --template typescript
-cd my-cloud-app
-npm install @cloud-diagrams/core @cloud-diagrams/aws @cloud-diagrams/react
-npm start
-```
-
-**Start coding and see your cloud architecture come to life! 🎨✨**
+**Made with ❤️ by the Kloud Diagramming Team**

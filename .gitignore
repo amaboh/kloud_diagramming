@@ -1,0 +1,167 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+lib/
+*.tsbuildinfo
+*.tgz
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Temporary folders
+tmp/
+temp/
+
+# Generated documentation files (keep source docs)
+docs/generated/
+*.generated.md
+
+# Test artifacts
+test-results/
+screenshots/
+
+# Backup files
+*.bak
+*.backup
+
+# Package manager lock files (keep package-lock.json for npm)
+yarn.lock
+pnpm-lock.yaml
+
+# Development and analysis files that shouldn't be committed
+CURRENT_STATUS_REPORT.md
+FIXES_AND_IMPROVEMENTS_SUMMARY.md
+PACKAGE_READINESS_REPORT.md
+MINGRAMMER_IMPLEMENTATION_SUMMARY.md
+FINAL_SOLUTION_SUMMARY.md
+D3JS_INTEGRATION_SOLUTION.md
+COMPLETE_SOLUTION_SUMMARY.md
+D3JS_DEMO_FIX.md
+ICON_RENDERING_SOLUTION.md
+ICON_LOADING_FIX.md
+INTEGRATION_SUMMARY.md
+MULTI_CLOUD_ICON_ANALYSIS_COMPLETE.md
+SUMMARY_D3_AWS_ICON_INTEGRATION.md
+D3_SVG_ICON_ANALYSIS.md
+DOCUMENTATION_COMPLETION_SUMMARY.md
+COMMIT_MESSAGE.md
+
+# Test and demo files that are for development only
+test-browser.html
+test-package.cjs
+test-implementation.html
+test-demos.js
+aws-icon-integration-example.ts
+analyze_multi_cloud_icons.js
+analyze_aws_icons.js
+
+# Generated directories that can be recreated
+generated/
+cloud_icons_svg/
+cloud-diagrams-ts/
+packages/
+demo/
+
+# Scripts directory (if it contains only build/dev scripts)
+scripts/
+
+# Keep examples but ignore some generated files in examples
+examples/*.umd.js
+examples/*.map
+examples/._*
+
+# Development and analysis files
+development/ 
+
+examples/._*
+examples/
+troubleshooting/
