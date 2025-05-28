@@ -29,7 +29,7 @@
     "format:check": "prettier --check src/**/*.{js,ts,json,md}",
     "serve": "npx http-server . -p 3000",
     "serve:dist": "npx http-server dist -p 3001",
-    "validate": "npm run lint && npm run build",
+    "validate": "npm run lint && npm run test && npm run build",
     "prepublishOnly": "npm run validate",
     "start": "npm run demo",
     "docs:serve": "npx http-server docs -p 8081 -o",
@@ -119,6 +119,23 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    },
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(d3|d3-.*)/)"
+    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.test.ts",
       "<rootDir>/src/**/*.test.ts"
@@ -132,6 +149,9 @@
       "src/**/*.ts",
       "!src/**/*.d.ts",
       "!src/**/__tests__/**"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/__tests__/setup.ts"
     ]
   }
 }
