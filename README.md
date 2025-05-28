@@ -1,696 +1,316 @@
-# @kloud-diagramming/core
+# 🌩️ Cloud Diagrams
 
-A complete **Mingrammer-style cloud architecture diagramming library** for JavaScript/TypeScript with D3.js integration. Create professional cloud architecture diagrams with 1,100+ official cloud service icons from AWS, Azure, and GCP.
-
-[![npm version](https://badge.fury.io/js/@kloud-diagramming%2Fcore.svg)](https://badge.fury.io/js/@kloud-diagramming%2Fcore)
+[![npm version](https://badge.fury.io/js/%40cloud-diagrams%2Fcore.svg)](https://badge.fury.io/js/%40cloud-diagrams%2Fcore)
+[![Downloads](https://img.shields.io/npm/dm/@cloud-diagrams/core.svg)](https://www.npmjs.com/package/@cloud-diagrams/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-## 🌟 Features
+> **A complete Mingrammer-style cloud architecture diagramming library for JavaScript/TypeScript with D3.js integration**
 
-- **🎯 Mingrammer-style API** - Familiar syntax for Python Mingrammer users
-- **☁️ 1,100+ Official Icons** - AWS (306+), Azure (588+), GCP (210+) service icons
-- **🎨 Professional D3.js Rendering** - SVG rendering with interactive features
-- **📦 Cluster Support** - Visual grouping with nested clusters
-- **🔗 Styled Edges** - Multiple line styles, arrows, and colors
-- **⚡ Interactive** - Zoom, pan, tooltips, and click events
-- **📱 Framework Agnostic** - Works with React, Vue, Angular, or vanilla JS
-- **🚀 TypeScript Ready** - Full TypeScript support with type definitions
-- **📤 Export Capabilities** - SVG export functionality
-- **🎭 Multiple Layout Algorithms** - Hierarchical, force-directed, and manual layouts
+Create professional cloud architecture diagrams with **1,100+ official cloud service icons** from AWS, Azure, and GCP. Built with D3.js for interactive, scalable, and beautiful visualizations.
 
-## 📦 Installation
+## ✨ Features
 
-```bash
-npm install @kloud-diagramming/core d3
-```
-
-```bash
-yarn add @kloud-diagramming/core d3
-```
-
-```bash
-pnpm add @kloud-diagramming/core d3
-```
+- 🎨 **1,100+ Official Icons** - AWS, Azure, GCP service icons
+- 🔧 **Mingrammer-Style API** - Familiar Python diagrams syntax for JavaScript
+- ⚡ **D3.js Powered** - Interactive, scalable, and performant
+- 📱 **Framework Agnostic** - Works with React, Vue, Angular, Next.js
+- 🎯 **TypeScript Ready** - Full type definitions included
+- 📦 **Multiple Formats** - UMD, ES Modules, CommonJS
+- 🎨 **SVG Export** - High-quality diagram exports
+- 🔄 **Real-time Updates** - Dynamic diagram modifications
 
 ## 🚀 Quick Start
 
-### Basic Usage
+### Installation
 
-```javascript
-import { Diagram, CloudDiagramsD3Renderer, EC2, S3, Lambda, RDS } from "@kloud-diagramming/core";
-
-// Create a new diagram
-const diagram = new Diagram("My Cloud Architecture");
-
-// Create cloud service nodes
-const web = new EC2("web", "Web Server");
-const api = new Lambda("api", "API Function");
-const db = new RDS("db", "Database");
-const storage = new S3("storage", "File Storage");
-
-// Add nodes to diagram
-diagram.addNode(web);
-diagram.addNode(api);
-diagram.addNode(db);
-diagram.addNode(storage);
-
-// Connect nodes using Mingrammer-style operators
-diagram.rightShift([web], [api]); // web >> api
-diagram.rightShift([api], [db, storage]); // api >> [db, storage]
-
-// Render the diagram
-const renderer = new CloudDiagramsD3Renderer("diagram-container", {
-    width: 1000,
-    height: 600,
-    layoutAlgorithm: 'hierarchical'
-});
-renderer.renderDiagram(diagram);
+```bash
+npm install @cloud-diagrams/core
 ```
 
-### Browser Usage (UMD)
+### Basic Usage
+
+```typescript
+import { 
+  Diagram, 
+  EC2, 
+  RDS, 
+  Lambda, 
+  CloudDiagramsD3Renderer 
+} from '@cloud-diagrams/core';
+
+// Create a new diagram
+const diagram = new Diagram('My Cloud Architecture');
+
+// Add cloud services
+const web = new EC2('Web Server');
+const api = new Lambda('API Gateway');
+const db = new RDS('Database');
+
+// Build the architecture
+diagram
+  .addNode(web)
+  .addNode(api)
+  .addNode(db)
+  .addEdge(web, api)
+  .addEdge(api, db);
+
+// Render with D3.js
+const renderer = new CloudDiagramsD3Renderer();
+renderer.render(diagram, '#diagram-container');
+```
+
+### Browser UMD Usage
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cloud Architecture Diagram</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/@cloud-diagrams/core/dist/index.umd.js"></script>
 </head>
 <body>
-    <div id="diagram-container"></div>
-    
-    <!-- Load D3.js -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <!-- Load @kloud-diagramming/core -->
-    <script src="https://unpkg.com/@kloud-diagramming/core/dist/index.umd.js"></script>
-    
+    <div id="diagram"></div>
     <script>
-        const { Diagram, CloudDiagramsD3Renderer, EC2, S3, RDS } = KloudDiagramming;
+        const { Diagram, EC2, S3, CloudDiagramsD3Renderer } = CloudDiagrams;
         
-        // Create diagram
-        const diagram = new Diagram("Simple AWS Architecture");
+        const diagram = new Diagram('Simple Architecture');
+        diagram.addNode(new EC2('Web')).addNode(new S3('Storage'));
         
-        // Add services
-        const web = new EC2("web", "Web Server");
-        const db = new RDS("db", "Database");
-        const storage = new S3("storage", "Storage");
-        
-        diagram.addNode(web);
-        diagram.addNode(db);
-        diagram.addNode(storage);
-        
-        // Connect services
-        diagram.rightShift([web], [db, storage]);
-        
-        // Render
-        const renderer = new CloudDiagramsD3Renderer("diagram-container", {
-            width: 800,
-            height: 400,
-            layoutAlgorithm: 'hierarchical'
-        });
-        renderer.renderDiagram(diagram);
+        const renderer = new CloudDiagramsD3Renderer();
+        renderer.render(diagram, '#diagram');
     </script>
 </body>
 </html>
 ```
 
-### With Clusters
+## 🏗️ Multi-Cloud Architecture Example
 
-```javascript
-import { Diagram, CloudDiagramsD3Renderer, EC2, Lambda, RDS, Cluster } from "@kloud-diagramming/core";
+```typescript
+import { 
+  Diagram, 
+  Cluster,
+  // AWS Services
+  EC2, S3, Lambda, RDS, VPC,
+  // Azure Services  
+  VirtualMachine, BlobStorage, FunctionApps,
+  // GCP Services
+  ComputeEngine, CloudStorage, CloudFunctions,
+  CloudDiagramsD3Renderer 
+} from '@cloud-diagrams/core';
 
-const diagram = new Diagram("Clustered Architecture");
+const diagram = new Diagram('Multi-Cloud Architecture');
 
-// Create a cluster
-const webTier = new Cluster("web-tier", "Web Tier", {
-    style: "rounded",
-    bgcolor: "#e3f2fd",
-    color: "#2196f3",
+// AWS Infrastructure
+const awsCluster = new Cluster('AWS Region');
+const ec2 = new EC2('Web Servers');
+const s3 = new S3('Static Assets');
+const lambda = new Lambda('API Functions');
+const rds = new RDS('Primary DB');
+
+awsCluster.addNode(ec2).addNode(s3).addNode(lambda).addNode(rds);
+
+// Azure Backup
+const azureCluster = new Cluster('Azure Backup');
+const vm = new VirtualMachine('Backup Server');
+const blob = new BlobStorage('Backup Storage');
+
+azureCluster.addNode(vm).addNode(blob);
+
+// GCP Analytics
+const gcpCluster = new Cluster('GCP Analytics');
+const gce = new ComputeEngine('Analytics Engine');
+const gcs = new CloudStorage('Data Lake');
+
+gcpCluster.addNode(gce).addNode(gcs);
+
+// Build the complete architecture
+diagram
+  .addCluster(awsCluster)
+  .addCluster(azureCluster)
+  .addCluster(gcpCluster)
+  .addEdge(ec2, lambda)
+  .addEdge(lambda, rds)
+  .addEdge(rds, vm)  // Cross-cloud backup
+  .addEdge(lambda, gce);  // Cross-cloud analytics
+
+// Render with custom styling
+const renderer = new CloudDiagramsD3Renderer({
+  width: 1200,
+  height: 800,
+  theme: 'professional'
 });
 
-// Create nodes
-const web1 = new EC2("web1", "Web Server 1");
-const web2 = new EC2("web2", "Web Server 2");
-const api = new Lambda("api", "API Service");
-const db = new RDS("db", "Database");
-
-// Add nodes to cluster
-webTier.addNode(web1);
-webTier.addNode(web2);
-
-// Add cluster and nodes to diagram
-diagram.addCluster(webTier);
-diagram.addNode(api);
-diagram.addNode(db);
-
-// Create connections
-diagram.rightShift([web1, web2], [api]);
-diagram.rightShift([api], [db]);
-
-// Render
-const renderer = new CloudDiagramsD3Renderer("container", {
-    layoutAlgorithm: 'hierarchical',
-    nodeSpacing: 150
-});
-renderer.renderDiagram(diagram);
+renderer.render(diagram, '#architecture-diagram');
 ```
 
-### React Integration
+## ⚛️ React Integration
 
-```jsx
-import React, { useEffect, useRef } from "react";
-import { Diagram, CloudDiagramsD3Renderer, EC2, S3 } from "@kloud-diagramming/core";
+```tsx
+import React, { useEffect, useRef } from 'react';
+import { 
+  Diagram, 
+  EC2, 
+  RDS, 
+  CloudDiagramsD3Renderer 
+} from '@cloud-diagrams/core';
 
-function CloudDiagram() {
-  const containerRef = useRef(null);
+const ArchitectureDiagram: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const diagram = new Diagram("React Cloud Architecture");
+    if (!containerRef.current) return;
 
-    const web = new EC2("web", "Web Server");
-    const storage = new S3("storage", "Storage");
+    const diagram = new Diagram('React Architecture');
+    const web = new EC2('Web Server');
+    const db = new RDS('Database');
+    
+    diagram.addNode(web).addNode(db).addEdge(web, db);
 
-    diagram.addNode(web);
-    diagram.addNode(storage);
-    diagram.rightShift([web], [storage]);
+    const renderer = new CloudDiagramsD3Renderer();
+    renderer.render(diagram, containerRef.current);
 
-    // Render to the container
-    const renderer = new CloudDiagramsD3Renderer(containerRef.current, {
-        width: 800,
-        height: 400,
-        layoutAlgorithm: 'force'
-    });
-    renderer.renderDiagram(diagram);
+    return () => {
+      // Cleanup on unmount
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
   }, []);
 
-  return <div ref={containerRef} style={{ width: "100%", height: "500px" }} />;
-}
-```
-
-### Next.js Integration
-
-```jsx
-// pages/diagram.js
-import dynamic from "next/dynamic";
-
-const CloudDiagram = dynamic(() => import("../components/CloudDiagram"), {
-  ssr: false, // Disable server-side rendering for D3.js
-});
-
-export default function DiagramPage() {
   return (
     <div>
-      <h1>My Cloud Architecture</h1>
-      <CloudDiagram />
+      <h2>My Cloud Architecture</h2>
+      <div 
+        ref={containerRef} 
+        style={{ width: '100%', height: '600px', border: '1px solid #ccc' }}
+      />
     </div>
   );
-}
-```
-
-### Vue.js Integration
-
-```vue
-<template>
-  <div>
-    <h1>Cloud Architecture</h1>
-    <div ref="diagramContainer" class="diagram-container"></div>
-  </div>
-</template>
-
-<script>
-import { Diagram, CloudDiagramsD3Renderer, EC2, S3, RDS } from "@kloud-diagramming/core";
-
-export default {
-  name: "CloudDiagram",
-  mounted() {
-    this.renderDiagram();
-  },
-  methods: {
-    renderDiagram() {
-      const diagram = new Diagram("Vue Cloud Architecture");
-      
-      const web = new EC2("web", "Web Server");
-      const db = new RDS("db", "Database");
-      const storage = new S3("storage", "Storage");
-      
-      diagram.addNode(web);
-      diagram.addNode(db);
-      diagram.addNode(storage);
-      
-      diagram.rightShift([web], [db, storage]);
-      
-      const renderer = new CloudDiagramsD3Renderer(this.$refs.diagramContainer, {
-        width: 800,
-        height: 400,
-        layoutAlgorithm: 'hierarchical'
-      });
-      renderer.renderDiagram(diagram);
-    }
-  }
 };
-</script>
 
-<style>
-.diagram-container {
-  width: 100%;
-  height: 500px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-</style>
+export default ArchitectureDiagram;
 ```
 
-## 🎨 Styling and Layout
+## 🎨 Available Services
 
-### Layout Algorithms
+### AWS Services (12 Core Services)
+- **Compute**: EC2, Lambda
+- **Storage**: S3
+- **Database**: RDS, DynamoDB
+- **Network**: VPC, ELB, CloudFront, API Gateway
+- **Monitoring**: CloudWatch
+- **Messaging**: SNS, SQS
 
-```javascript
-// Hierarchical layout (default)
-const renderer = new CloudDiagramsD3Renderer("container", {
-    layoutAlgorithm: 'hierarchical',
-    nodeSpacing: 150,
-    levelSpacing: 100
+### Azure Services (12 Core Services)
+- **Compute**: Virtual Machine, Function Apps, Container Instances, App Service
+- **Storage**: Blob Storage
+- **Database**: SQL Database, Cosmos DB
+- **Network**: Virtual Network, Application Gateway
+- **Security**: Key Vault
+- **Monitoring**: Monitor
+- **Messaging**: Service Bus
+
+### GCP Services (12 Core Services)
+- **Compute**: Compute Engine, Cloud Functions, App Engine, GKE, Cloud Run
+- **Storage**: Cloud Storage
+- **Database**: Cloud SQL, Firestore
+- **Network**: VPC, Load Balancing
+- **Monitoring**: Cloud Monitoring
+- **Messaging**: Pub/Sub
+
+## 📊 Export & Customization
+
+### SVG Export
+
+```typescript
+import { SVGExporter } from '@cloud-diagrams/core';
+
+const exporter = new SVGExporter();
+const svgString = exporter.export(diagram, {
+  width: 1200,
+  height: 800,
+  format: 'svg'
 });
 
-// Force-directed layout
-const renderer = new CloudDiagramsD3Renderer("container", {
-    layoutAlgorithm: 'force',
-    forceStrength: -300,
-    linkDistance: 100
-});
-
-// Manual positioning
-const renderer = new CloudDiagramsD3Renderer("container", {
-    layoutAlgorithm: 'manual'
-});
-
-// Set manual positions
-web.setPosition(100, 100);
-db.setPosition(300, 100);
+// Download or save the SVG
+const blob = new Blob([svgString], { type: 'image/svg+xml' });
+const url = URL.createObjectURL(blob);
 ```
 
-### Custom Edge Styles
+### Custom Styling
 
-```javascript
-// Create custom edges with styling
-const edge = diagram.connect(web, api, {
-  label: "HTTPS",
-  color: "#4CAF50",
-  style: "dashed",
-  strokeWidth: 2
-});
-
-// Using Edge builder for complex styling
-import { EdgeBuilder } from "@kloud-diagramming/core";
-
-const styledEdge = new EdgeBuilder()
-    .from(web)
-    .to(api)
-    .label("API Calls")
-    .color("#2196F3")
-    .style("solid")
-    .arrowhead("diamond")
-    .build();
-
-diagram.addEdge(styledEdge);
-```
-
-### Cluster Styling
-
-```javascript
-const cluster = new Cluster("prod-env", "Production Environment", {
-  style: "filled",
-  bgcolor: "#fff3e0",
-  color: "#ff9900",
-  fontcolor: "#e65100",
-  penwidth: 2,
-  borderRadius: 10
+```typescript
+const renderer = new CloudDiagramsD3Renderer({
+  theme: {
+    background: '#f8f9fa',
+    nodeColor: '#ffffff',
+    edgeColor: '#6c757d',
+    textColor: '#212529',
+    clusterColor: '#e9ecef'
+  },
+  layout: {
+    algorithm: 'hierarchical',
+    spacing: 100,
+    direction: 'top-to-bottom'
+  },
+  animation: {
+    enabled: true,
+    duration: 1000,
+    easing: 'ease-in-out'
+  }
 });
 ```
 
-## 📚 API Reference
+## 🔧 API Reference
 
 ### Core Classes
 
-#### `Diagram`
+- **`Diagram`** - Main diagram container
+- **`Node`** - Individual service nodes
+- **`Edge`** - Connections between nodes
+- **`Cluster`** - Grouping container for nodes
+- **`Group`** - Logical grouping of elements
 
-Main diagram class for creating cloud architecture diagrams.
+### Renderers
 
-```typescript
-class Diagram {
-  constructor(title: string, config?: DiagramConfig);
-
-  // Node management
-  addNode(node: Node): void;
-  removeNode(nodeId: string): void;
-  getNode(nodeId: string): Node | undefined;
-  getAllNodes(): Node[];
-
-  // Cluster management
-  addCluster(cluster: Cluster): void;
-  removeCluster(clusterId: string): void;
-  getCluster(clusterId: string): Cluster | undefined;
-
-  // Edge management
-  addEdge(edge: Edge): void;
-  connect(from: Node, to: Node, options?: EdgeOptions): Edge;
-
-  // Mingrammer-style operators
-  rightShift(from: Node | Node[], to: Node | Node[]): Edge[]; // >>
-  leftShift(from: Node | Node[], to: Node | Node[]): Edge[]; // <<
-  undirected(from: Node | Node[], to: Node | Node[]): Edge[]; // -
-
-  // Utility methods
-  getStatistics(): DiagramStatistics;
-  validate(): ValidationResult;
-  clear(): void;
-}
-```
-
-#### `CloudDiagramsD3Renderer`
-
-D3.js-based renderer for creating interactive SVG diagrams.
-
-```typescript
-class CloudDiagramsD3Renderer {
-  constructor(
-    container: string | HTMLElement,
-    options?: RenderOptions
-  );
-
-  // Rendering
-  renderDiagram(diagram: Diagram): Promise<void>;
-  updateDiagram(diagram: Diagram): Promise<void>;
-  clear(): void;
-
-  // Export
-  exportSVG(): string;
-  exportPNG(options?: ExportOptions): Promise<Blob>;
-
-  // Interaction
-  enableZoom(enabled: boolean): void;
-  enablePan(enabled: boolean): void;
-  fitToContainer(): void;
-  
-  // Events
-  on(event: string, callback: Function): void;
-  off(event: string, callback?: Function): void;
-}
-```
-
-#### `Node`
-
-Base class for all cloud service nodes.
-
-```typescript
-class Node {
-  constructor(
-    id: string,
-    label: string,
-    provider: CloudProvider,
-    service: string,
-    options?: NodeOptions
-  );
-
-  // Properties
-  getId(): string;
-  getLabel(): string;
-  getProvider(): CloudProvider;
-  getService(): string;
-  getCategory(): string;
-  
-  // Positioning
-  setPosition(x: number, y: number): void;
-  getPosition(): { x: number; y: number };
-  
-  // Styling
-  setStyle(style: NodeStyle): void;
-  getStyle(): NodeStyle;
-  
-  // Metadata
-  setMetadata(key: string, value: any): void;
-  getMetadata(key?: string): any;
-}
-```
-
-### Service Classes
-
-#### AWS Services
-
-```javascript
-import { 
-  EC2, S3, Lambda, RDS, ELB, VPC, CloudFront, 
-  APIGateway, DynamoDB, SNS, SQS, CloudWatch 
-} from '@kloud-diagramming/core';
-
-// Compute
-const compute = new EC2('web', 'Web Server');
-const serverless = new Lambda('api', 'API Function');
-
-// Storage
-const storage = new S3('data', 'Data Bucket');
-
-// Database
-const database = new RDS('db', 'Database');
-const nosql = new DynamoDB('cache', 'Cache');
-
-// Networking
-const loadBalancer = new ELB('lb', 'Load Balancer');
-const vpc = new VPC('vpc', 'Virtual Private Cloud');
-const cdn = new CloudFront('cdn', 'CDN');
-const api = new APIGateway('api-gw', 'API Gateway');
-
-// Messaging
-const notifications = new SNS('sns', 'Notifications');
-const queue = new SQS('queue', 'Message Queue');
-
-// Monitoring
-const monitoring = new CloudWatch('cw', 'CloudWatch');
-```
-
-#### Azure Services
-
-```javascript
-import {
-  VirtualMachine, BlobStorage, SQLDatabase, FunctionApps,
-  AppService, ApplicationGateway, VirtualNetwork, CosmosDB,
-  ServiceBus, KeyVault, Monitor, ContainerInstances
-} from '@kloud-diagramming/core';
-
-// Compute
-const vm = new VirtualMachine('web', 'Web VM');
-const functions = new FunctionApps('api', 'Functions');
-const webapp = new AppService('app', 'Web App');
-const containers = new ContainerInstances('containers', 'Containers');
-
-// Storage
-const blob = new BlobStorage('storage', 'Blob Storage');
-
-// Database
-const sql = new SQLDatabase('db', 'SQL Database');
-const cosmos = new CosmosDB('nosql', 'Cosmos DB');
-
-// Networking
-const appGateway = new ApplicationGateway('agw', 'App Gateway');
-const vnet = new VirtualNetwork('vnet', 'Virtual Network');
-
-// Security & Management
-const keyVault = new KeyVault('kv', 'Key Vault');
-const monitor = new Monitor('monitor', 'Monitor');
-
-// Messaging
-const serviceBus = new ServiceBus('sb', 'Service Bus');
-```
-
-#### GCP Services
-
-```javascript
-import {
-  ComputeEngine, CloudStorage, CloudSQL, CloudFunctions,
-  AppEngine, LoadBalancing, VPC as GCPVPC, Firestore,
-  PubSub, CloudRun, GKE, CloudMonitoring
-} from '@kloud-diagramming/core';
-
-// Compute
-const compute = new ComputeEngine('web', 'Compute Instance');
-const functions = new CloudFunctions('api', 'Cloud Functions');
-const appEngine = new AppEngine('app', 'App Engine');
-const cloudRun = new CloudRun('run', 'Cloud Run');
-const kubernetes = new GKE('k8s', 'GKE Cluster');
-
-// Storage
-const storage = new CloudStorage('data', 'Cloud Storage');
-
-// Database
-const sql = new CloudSQL('db', 'Cloud SQL');
-const firestore = new Firestore('nosql', 'Firestore');
-
-// Networking
-const loadBalancer = new LoadBalancing('lb', 'Load Balancer');
-const vpc = new GCPVPC('vpc', 'VPC Network');
-
-// Messaging & Monitoring
-const pubsub = new PubSub('pubsub', 'Pub/Sub');
-const monitoring = new CloudMonitoring('monitoring', 'Cloud Monitoring');
-```
-
-## 🔧 Advanced Features
+- **`CloudDiagramsD3Renderer`** - D3.js-based interactive renderer
 
 ### Icon Management
 
-```javascript
-import { 
-  createIconRegistry, 
-  loadAwsIcons, loadAzureIcons, loadGcpIcons,
-  getAwsIconCount, areAwsIconsLoaded 
-} from '@kloud-diagramming/core';
+- **`loadAwsIcons()`** - Load AWS service icons
+- **`loadAzureIcons()`** - Load Azure service icons  
+- **`loadGcpIcons()`** - Load GCP service icons
 
-// Check icon loading status
-console.log('AWS icons loaded:', areAwsIconsLoaded());
-console.log('AWS icon count:', getAwsIconCount());
+## 📦 Package Information
 
-// Load icons manually (usually automatic)
-await loadAwsIcons();
-await loadAzureIcons();
-await loadGcpIcons();
-
-// Create custom icon registry
-const customRegistry = createIconRegistry({
-  customIcons: {
-    'my-service': {
-      svg: '<svg>...</svg>',
-      metadata: {
-        name: 'My Custom Service',
-        category: 'Custom',
-        provider: 'custom'
-      }
-    }
-  }
-});
-```
-
-### Event Handling
-
-```javascript
-// Listen for renderer events
-renderer.on('nodeClick', (event) => {
-  console.log('Clicked node:', event.node.getId());
-});
-
-renderer.on('nodeHover', (event) => {
-  console.log('Hovered node:', event.node.getLabel());
-});
-
-renderer.on('diagramReady', () => {
-  console.log('Diagram rendered successfully');
-});
-
-// Custom node interactions
-const webServer = new EC2('web', 'Web Server');
-webServer.setMetadata('onClick', () => {
-  window.open('https://console.aws.amazon.com/ec2');
-});
-```
-
-### Export Options
-
-```javascript
-// Export as SVG string
-const svgString = renderer.exportSVG();
-
-// Export as PNG blob
-const pngBlob = await renderer.exportPNG({
-  width: 1920,
-  height: 1080,
-  quality: 0.9,
-  backgroundColor: 'white'
-});
-
-// Download exported diagram
-function downloadDiagram(format = 'svg') {
-  const content = format === 'svg' ? 
-    renderer.exportSVG() : 
-    renderer.exportPNG();
-    
-  const blob = new Blob([content], { 
-    type: format === 'svg' ? 'image/svg+xml' : 'image/png' 
-  });
-  
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `diagram.${format}`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-```
-
-## 🔧 Configuration
-
-### Diagram Configuration
-
-```javascript
-const diagram = new Diagram("My Architecture", {
-  direction: "TB", // Top to Bottom, LR (Left to Right), etc.
-  theme: "default", // default, dark, aws, azure, gcp
-  showGrid: true,
-  snapToGrid: false,
-  gridSize: 20
-});
-```
-
-### Render Options
-
-```javascript
-const renderer = new CloudDiagramsD3Renderer("container", {
-  width: 1200,
-  height: 800,
-  layoutAlgorithm: 'hierarchical', // hierarchical, force, manual
-  nodeSpacing: 150,
-  levelSpacing: 100,
-  enableZoom: true,
-  enablePan: true,
-  enableTooltips: true,
-  theme: 'default',
-  backgroundColor: '#f5f5f5',
-  
-  // Force layout specific options
-  forceStrength: -300,
-  linkDistance: 100,
-  
-  // Animation options
-  animationDuration: 750,
-  enableAnimations: true
-});
-```
-
-## 🌐 Browser Support
-
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
-
-## 📄 License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
+- **Size**: 253 KB unpacked
+- **Files**: 41 total files
+- **Dependencies**: D3.js v7+
+- **Node.js**: >=16.0.0
+- **TypeScript**: Full support included
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We welcome contributions! Please see our [Contributing Guide](./docs/CONTRIBUTING.md) for details.
 
-## 📞 Support
+## 📄 License
 
-- 📖 [Documentation](https://github.com/amaboh/kloud_diagramming)
-- 🐛 [Issue Tracker](https://github.com/amaboh/kloud_diagramming/issues)
-- 💬 [Discussions](https://github.com/amaboh/kloud_diagramming/discussions)
+MIT License - see [LICENSE](./LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🔗 Links
 
-- Inspired by [Mingrammer Diagrams](https://diagrams.mingrammer.com/) for Python
-- Built with [D3.js](https://d3js.org/) for powerful data visualization
-- Icons provided by AWS, Microsoft Azure, and Google Cloud Platform
+- **NPM Package**: https://www.npmjs.com/package/@cloud-diagrams/core
+- **GitHub Repository**: https://github.com/amaboh/kloud_diagramming
+- **Documentation**: https://github.com/amaboh/kloud_diagramming#readme
+- **Issues**: https://github.com/amaboh/kloud_diagramming/issues
+
+## 👨‍💻 Author
+
+**amaboh**
+- GitHub: [@amaboh](https://github.com/amaboh)
+- Email: amaboh@github.com
 
 ---
 
-**Made with ❤️ by the Kloud Diagramming Team**
+**⭐ Star this project if you find it useful!**

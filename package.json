@@ -1,6 +1,6 @@
 {
   "name": "@cloud-diagrams/core",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A complete Mingrammer-style cloud architecture diagramming library for JavaScript/TypeScript with D3.js integration. Create professional cloud architecture diagrams with 1,100+ official cloud service icons from AWS, Azure, and GCP.",
   "type": "module",
   "main": "dist/index.js",
